@@ -8,19 +8,20 @@ import { handle } from "hono/vercel";
 const app = new Hono()
   .basePath("/api")
   .on(["GET", "POST"], "/auth/**", (c) => auth.handler(c.req.raw))
-  .get("/test-middleware", mustAuth  , async (c) => {
-    return c.json({ message: "hllo" });
+  .get("/me", mustAuth, async (c) => {
+    const user = c.get("user");
+    return c.json({ data: user });
   })
 
   .onError((err, c) => {
     console.error(err);
     if (err instanceof HTTPException) {
-      return c.json({ error: err.message } , err.status);
+      return c.json({ error: err.message }, err.status);
     }
     return c.json({ error: "Internal server error" }, 500);
   });
 
-  showRoutes(app)
+showRoutes(app);
 
 export const GET = handle(app);
 export const POST = handle(app);

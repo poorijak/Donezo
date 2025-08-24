@@ -1,13 +1,20 @@
 import { Control, FieldValues, Path } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 
-interface InputFormProps<T extends FieldValues,> {
+interface InputFormProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label: string;
   type?: string;
-  placeholder: string;
+  required?: boolean;
+  placeholder?: string;
 }
 
 const InputForm = <T extends FieldValues>({
@@ -16,6 +23,7 @@ const InputForm = <T extends FieldValues>({
   label,
   type = "text",
   placeholder,
+  required = true,
 }: InputFormProps<T>) => {
   return (
     <div>
@@ -26,15 +34,19 @@ const InputForm = <T extends FieldValues>({
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <Input placeholder={placeholder} type={type} {...field} />
+              <Input
+                placeholder={placeholder}
+                type={type}
+                {...field}
+                required={required}
+              />
             </FormControl>
-            <FormMessage/>
+            <FormMessage />
           </FormItem>
         )}
       />
-      
     </div>
   );
 };
 
-export default InputForm
+export default InputForm;
