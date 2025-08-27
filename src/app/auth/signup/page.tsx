@@ -1,5 +1,5 @@
-import AuthForm from "@/feature/auth/components/authForm";
-import AuthHeader from "@/feature/auth/components/authHeder";
+import AuthForm from "@/feature/auth/components/auth-form";
+import AuthHeader from "@/feature/auth/components/auth-header";
 import React from "react";
 
 const page = () => {

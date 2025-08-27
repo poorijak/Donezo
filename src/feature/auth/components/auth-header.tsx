@@ -1,11 +1,11 @@
+"use client";
+
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import React from "react";
 
 interface AuthHeaderProp {
@@ -14,6 +14,7 @@ interface AuthHeaderProp {
 }
 
 const AuthHeader = ({ type, children }: AuthHeaderProp) => {
+
   let title = "";
   let desc = "";
 

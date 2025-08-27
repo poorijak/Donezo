@@ -1,10 +1,19 @@
+import { authCheck } from "@/lib/routeGuard";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
-const AuthLayout = ({ children }: AuthLayoutProps) => {
+const AuthLayout = async ({ children }: AuthLayoutProps) => {
+  const user = await authCheck();
+
+  if (user) {
+    redirect("/")
+  }
+
   return (
     <div className="flex flex-col justify-center items-center min-h-svh">
       <main>{children}</main>

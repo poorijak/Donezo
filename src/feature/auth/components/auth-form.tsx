@@ -6,24 +6,27 @@ import { useForm } from "react-hook-form";
 import { signinSchema, signupSchema } from "../schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputForm from "@/components/shared/input-form";
-import { AuthValue } from "@/type/auth";
+import { AuthValue, signinValue, signupValue } from "@/type/auth";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import SubmitBtn from "@/components/shared/submit-btn";
-import AuthFooter from "./authFooter";
+import AuthFooter from "./auth-footer";
+import { useSigninWithEmail, useSignupWithEmail } from "@/hooks/auth/useAuth";
 
 interface AuthFormProps {
   type: "signin" | "signup";
 }
+const PLACEHOLDER = {
+  email: "you@example.com",
+  password: "Password",
+  signup: {
+    name: "Full name (e.g. John Doe)",
+    password: "At least 8 characters • A-z, 0-9, symbol",
+  },
+};
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  const PLACEHOLDER = {
-    email: "you@example.com",
-    password: "Password",
-    signup: {
-      name: "Full name (e.g. John Doe)",
-      password: "At least 8 characters • A-z, 0-9, symbol",
-    },
-  };
+  const signin = useSigninWithEmail();
+  const signup = useSignupWithEmail();
 
   const schema = useMemo(
     () => (type === "signin" ? signinSchema : signupSchema),
@@ -47,9 +50,21 @@ const AuthForm = ({ type }: AuthFormProps) => {
     );
   }, [type]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const handleSubmit = (value: AuthValue) => {
+    console.log(value);
+    if (type === "signin") {
+      signin.mutate(value as signinValue);
+    } else if (type === "signup") {
+      signup.mutate(value as signupValue);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-4">
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
         <CardContent>
           <div className="flex flex-col gap-5">
             <InputForm
@@ -79,11 +94,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
               }
               required
             />
-            <SubmitBtn name="Sign in" />
+            <SubmitBtn name={type === "signin" ? "Sign in" : "sign up"} />
           </div>
         </CardContent>
         <CardFooter className="w-full">
-          <AuthFooter />
+          <AuthFooter type={type} />
         </CardFooter>
       </form>
     </Form>

@@ -39,6 +39,7 @@ const InputForm = <T extends FieldValues>({
                 type={type}
                 {...field}
                 required={required}
+                className="placeholder:text-sm"
               />
             </FormControl>
             <FormMessage />

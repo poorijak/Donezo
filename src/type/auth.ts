@@ -7,7 +7,7 @@ export type authType = () => {
   session: typeof auth.$Infer.Session.session | null;
 };
 
-type signinValue = z.infer<typeof signinSchema>;
-type signupValue = z.infer<typeof signupSchema>;
+export type signinValue = z.infer<typeof signinSchema>;
+export type signupValue = z.infer<typeof signupSchema>;
 
 export type AuthValue = signinValue | signupValue;

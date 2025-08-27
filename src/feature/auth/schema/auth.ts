@@ -1,4 +1,4 @@
-import z, { email } from "zod";
+import z from "zod";
 
 const MIN_NAME_LENGTH = 3;
 const MIN_PASSWORD_LENGTH = 8;
@@ -24,7 +24,7 @@ const ERROR_MESSAGE = {
 const passwordSchema = z
   .string()
   .min(MIN_PASSWORD_LENGTH, ERROR_MESSAGE.password.length)
-  .regex(/A-Z]/, ERROR_MESSAGE.password.uppercase)
+  .regex(/[A-Z]/, ERROR_MESSAGE.password.uppercase)
   .regex(/[a-z]/, ERROR_MESSAGE.password.lowercase)
   .regex(/[0-9]/, ERROR_MESSAGE.password.number)
   .regex(new RegExp(`[${SPECIAL_CHARS}]`), ERROR_MESSAGE.password.special);
@@ -37,9 +37,11 @@ export const signupSchema = z.object({
   email: emailSchema,
   name: z.string().min(MIN_NAME_LENGTH, ERROR_MESSAGE.name),
   password: passwordSchema,
+  callbackURL : z.string().optional()
 });
 
 export const signinSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
+  callbackURL : z.string().optional()
 });
