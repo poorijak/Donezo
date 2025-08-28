@@ -1,8 +1,9 @@
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
+import { auth } from "./auth";
 
 export const authCheck = async () => {
-  const cookieStore = cookies();
-  const session = (await cookieStore).get("better-auth.session_token");
-
-  return session;
+  const user = (await auth.api.getSession({ headers: await headers() }))?.user;
+  return user
+    ? (({ id, email, name, image }) => ({ id, email, name, image }))(user)
+    : null;
 };

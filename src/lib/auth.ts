@@ -50,6 +50,11 @@ export const auth = betterAuth({
       redirectURI: "http://localhost:3000/api/auth/callback/facebook",
       scope: ["email", "public_profile"],
     },
+    github : {
+      clientId : process.env.GITHUB_CLIENT_ID as string,
+      clientSecret : process.env.GITHUB_CLIENT_SECRET as string,
+      redirectURI : "http://localhost:3000/api/auth/callback/github"
+    }
   },
   database: prismaAdapter(prisma, {
     provider: "postgresql",

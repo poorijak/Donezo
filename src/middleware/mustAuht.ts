@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { authType } from "@/type/auth";
+import { authType } from "@/types/auth";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 
@@ -16,5 +16,4 @@ export const mustAuth = createMiddleware<{
 
     c.set("user" , session.user)
     await next()
-
 })

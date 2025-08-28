@@ -31,7 +31,7 @@ const AuthHeader = ({ type, children }: AuthHeaderProp) => {
 
   return (
     <div className="px-2 md:px-0 ">
-      <Card className="min-w-xs sm:min-w-md mx-auto">
+      <Card className="min-w-xs md:min-w-md mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             {title}

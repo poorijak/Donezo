@@ -3,6 +3,7 @@ import { showRoutes } from "hono/dev";
 import { HTTPException } from "hono/http-exception";
 import { handle } from "hono/vercel";
 import { authApp } from "@/feature/auth/api/route";
+import { userApp } from "@/feature/user/api/route";
 
 const app = new Hono()
   .basePath("/api")
@@ -14,7 +15,8 @@ const app = new Hono()
     return c.json({ error: "Internal server error" }, 500);
   })
 
-  .route("/auth", authApp);
+  .route("/auth", authApp)
+  .route("/user", userApp);
 
 export const GET = handle(app);
 export const POST = handle(app);

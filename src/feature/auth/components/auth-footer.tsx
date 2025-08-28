@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FaApple, FaFacebook } from "react-icons/fa";
-import { useSigninWithSocial } from "@/hooks/auth/useAuth";
+import { FaApple, FaFacebook, FaGithub } from "react-icons/fa";
+import { useSigninWithSocial } from "@/hooks/auth/useAuthQuery";
 import { IoLogoFacebook } from "react-icons/io5";
 
 interface AuthfooterProps {
@@ -27,17 +27,22 @@ const authProvider = [
   {
     provider: "google",
     icon: <FcGoogle />,
-    label: "Sign in with Google",
+    label: {
+      mobile: "Google",
+      desktop: "Sign in with Google",
+    },
   },
   {
-    provider: "facebook",
-    icon: <IoLogoFacebook color="1877f2" />,
-    label: "Sign in with Facebook",
+    provider: "github",
+    icon: <FaGithub />,
+    label: {
+      mobile: "Github",
+      desktop: "Sign in with Github",
+    },
   },
 ];
 
 const AuthFooter = ({ type }: AuthfooterProps) => {
-  
   const signinSocial = useSigninWithSocial();
   const { footerText, linkHref, linkText } = authTextMap[type];
 
@@ -64,7 +69,10 @@ const AuthFooter = ({ type }: AuthfooterProps) => {
             onClick={() => handleSubmit(p.provider)}
           >
             {p.icon}
-            <p>{p.label}</p>
+            <p>
+              <span className="hidden md:block">{p.label.desktop}</span>
+              <span className="block md:hidden">{p.label.mobile}</span>
+            </p>
           </Button>
         ))}
       </div>

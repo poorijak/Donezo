@@ -2,6 +2,7 @@
 import { authClient } from "@/lib/auth-client";
 import { client } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { error } from "console";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -131,4 +132,29 @@ export const useSigninWithSocial = () => {
     },
   });
   return mutation;
+};
+
+export const useSignOut = () => {
+  const route = useRouter()
+  const queryClinet = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const res = await authClient.signOut();
+
+      if (!res.data) {
+        throw new Error("Sign out faild");
+      }
+    },
+    onSuccess: () => {
+      queryClinet.invalidateQueries({ queryKey: ["user"] });
+      route.push("/auth/signin")
+      
+    },
+
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
+  return mutation
 };

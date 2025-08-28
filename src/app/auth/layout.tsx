@@ -11,8 +11,10 @@ const AuthLayout = async ({ children }: AuthLayoutProps) => {
   const user = await authCheck();
 
   if (user) {
-    redirect("/")
+    redirect("/");
   }
+
+  console.log(user);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-svh">

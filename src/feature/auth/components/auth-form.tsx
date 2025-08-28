@@ -6,11 +6,11 @@ import { useForm } from "react-hook-form";
 import { signinSchema, signupSchema } from "../schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputForm from "@/components/shared/input-form";
-import { AuthValue, signinValue, signupValue } from "@/type/auth";
+import { AuthValue, signinValue, signupValue } from "@/types/auth";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import SubmitBtn from "@/components/shared/submit-btn";
 import AuthFooter from "./auth-footer";
-import { useSigninWithEmail, useSignupWithEmail } from "@/hooks/auth/useAuth";
+import { useSigninWithEmail, useSignupWithEmail } from "@/hooks/auth/useAuthQuery";
 
 interface AuthFormProps {
   type: "signin" | "signup";

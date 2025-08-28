@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { signinSchema, signupSchema } from "../schema/auth";
 import { getCookie } from "hono/cookie";
+import { headers } from "next/headers";
 
 export const authApp = new Hono()
   .post("/sign-in/email", zValidator("json", signinSchema), async (c) => {
@@ -42,9 +43,14 @@ export const authApp = new Hono()
     const body = await c.req.json();
     const res = await auth.api.signInSocial({
       body,
-      asResponse : true
+      asResponse: true,
     });
 
-    return res
+    return res;
+  })
+  .post("/sigin-out", async (c) => {
+    await auth.api.signOut({ headers: await headers() });
+
+    return c.status(200);
   })
   .on(["GET", "POST"], "/*", (c) => auth.handler(c.req.raw));
