@@ -7,11 +7,13 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 interface InputFormProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label: string;
+  inputType: "input" | "textArea";
   type?: string;
   required?: boolean;
   placeholder?: string;
@@ -21,6 +23,7 @@ const InputForm = <T extends FieldValues>({
   control,
   name,
   label,
+  inputType = "input",
   type = "text",
   placeholder,
   required = true,
@@ -34,13 +37,22 @@ const InputForm = <T extends FieldValues>({
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <Input
-                placeholder={placeholder}
-                type={type}
-                {...field}
-                required={required}
-                className="placeholder:text-sm"
-              />
+              {inputType === "input" ? (
+                <Input
+                  placeholder={placeholder}
+                  type={type}
+                  {...field}
+                  required={required}
+                  className="placeholder:text-sm"
+                />
+              ) : (
+                <Textarea
+                  placeholder={placeholder}
+                  {...field}
+                  required={required}
+                  className="placeholder:text-sm"
+                />
+              )}
             </FormControl>
             <FormMessage />
           </FormItem>

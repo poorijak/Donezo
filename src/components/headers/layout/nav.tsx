@@ -14,7 +14,13 @@ const Navbar = ({ user }: NavbarProps) => {
   return (
     <nav>
       <div className="md:hidden flex">
-        <MobileUserMenu user={user} />
+        {user ? (
+          <MobileUserMenu user={user} />
+        ) : (
+          <Button variant="outline" asChild>
+            <Link href={"/auth/signin"}>Sign in</Link>
+          </Button>
+        )}
       </div>
       <div className="justify-between items-center w-full md:flex hidden">
         {user ? (

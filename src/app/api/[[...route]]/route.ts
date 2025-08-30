@@ -4,6 +4,7 @@ import { HTTPException } from "hono/http-exception";
 import { handle } from "hono/vercel";
 import { authApp } from "@/feature/auth/api/route";
 import { userApp } from "@/feature/user/api/route";
+import { TaskApp } from "@/feature/task/api/route";
 
 const app = new Hono()
   .basePath("/api")
@@ -16,7 +17,8 @@ const app = new Hono()
   })
 
   .route("/auth", authApp)
-  .route("/user", userApp);
+  .route("/user", userApp)
+  .route("/task", TaskApp);
 
 export const GET = handle(app);
 export const POST = handle(app);

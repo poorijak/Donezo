@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum status {
+  pending
+  inProgress
+  done
+}
+
 model User {
   id            String    @id
   name          String
@@ -23,6 +29,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  Todo          Todo[]
 
   @@unique([email])
   @@map("user")
@@ -71,4 +78,37 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Todo {
+  id        String    @id @unique @default(uuid())
+  title     String
+  note      String?
+  start     DateTime?
+  end       DateTime?
+  status    status    @default(pending)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  TodoTag   TodoTag[]
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  icon      String
+  title     String
+  slug      String    @unique
+  color     String
+  createAt  DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  TodoTag   TodoTag[]
+}
+
+model TodoTag {
+  id     String @id @default(uuid())
+  todoId String
+  tagId  String
+  todo   Todo   @relation(fields: [todoId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id])
 }

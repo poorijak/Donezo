@@ -13,7 +13,7 @@ import { userType } from "@/types/user";
 import Link from "next/link";
 import Image from "next/image";
 import UserAvatarSmall, { UserAvatar } from "../components/user-comp";
-import { useSignOut } from "@/hooks/auth/useAuthQuery";
+import { useSignOut } from "@/feature/auth/hooks/auth/useAuthQuery";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 
 interface MobileUserMenuProps {

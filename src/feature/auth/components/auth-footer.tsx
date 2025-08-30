@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook, FaGithub } from "react-icons/fa";
-import { useSigninWithSocial } from "@/hooks/auth/useAuthQuery";
+import { useSigninWithSocial } from "@/feature/auth/hooks/auth/useAuthQuery";
 import { IoLogoFacebook } from "react-icons/io5";
 
 interface AuthfooterProps {

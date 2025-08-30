@@ -9,8 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MailsIcon } from "@/components/ui/MailsIcon";
-import { useSendEmail } from "@/hooks/auth/useAuthQuery";
-import { useGetUser } from "@/hooks/user/useUserQuery";
+import { useSendEmail } from "@/feature/auth/hooks/auth/useAuthQuery";
+import { useGetUser } from "@/feature/user/hooks/useUserQuery";
 import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";

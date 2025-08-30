@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { userType } from "@/types/user";
 import UserAvatarSmall, { UserAvatar } from "../components/user-comp";
-import { useSignOut } from "@/hooks/auth/useAuthQuery";
+import { useSignOut } from "@/feature/auth/hooks/auth/useAuthQuery";
 
 interface DesktopHeadersProp {
   user: userType | null;
