@@ -26,7 +26,7 @@ const InputForm = <T extends FieldValues>({
   inputType = "input",
   type = "text",
   placeholder,
-  required = true,
+  required = false,
 }: InputFormProps<T>) => {
   return (
     <div>

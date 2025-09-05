@@ -9,29 +9,27 @@ import {
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { TagType } from "@/types/task";
-import { X } from "lucide-react";
 import React from "react";
 
 interface TagSelectorProps {
   data: TagType[] | undefined;
-  selected: string[];
-  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  selected: string[] | undefined;
+  setSelected: (val: string[]) => void;
 }
 
 const TagSelector = ({ data, setSelected, selected }: TagSelectorProps) => {
-  const existingSelected = (dataId: string) => {
-    return selected.includes(dataId);
-  };
+  const existingSelected = (dataId: string) => !!selected?.includes(dataId);
 
   const handleSelected = (dataId: string) => {
-    setSelected((prev) =>
-      prev.includes(dataId)
-        ? prev.filter((id) => id !== dataId)
-        : [...prev, dataId]
-    );
+    const prev = selected ?? [];
+    const next = prev.includes(dataId)
+      ? prev.filter((id) => id !== dataId)
+      : [...prev, dataId];
+
+    setSelected(next);
   };
 
-  return (
+  return ( 
     <div className="flex flex-col gap-3">
       <Label>Task Tag</Label>
       <div className="min-w-full">

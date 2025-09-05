@@ -1,21 +1,24 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { CalendarIcon, ChevronDownIcon } from "lucide-react"
-import { type DateRange } from "react-day-picker"
+import * as React from "react";
+import { ChevronDownIcon } from "lucide-react";
+import { type DateRange } from "react-day-picker";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
-export default function Calendar23() {
-  const [range, setRange] = React.useState<DateRange | undefined>(undefined)
+interface DatePickerProps {
+  date: DateRange | undefined ;
+  setDate: (range: DateRange | undefined) => void;
+}
 
+export default function DatePicker({ date, setDate }: DatePickerProps) {
   return (
     <div className="flex flex-col gap-3">
       <Label htmlFor="dates" className="px-1">
@@ -26,25 +29,25 @@ export default function Calendar23() {
           <Button
             variant="outline"
             id="dates"
-            className="w-full justify-between font-normal"
+            className="w-56 justify-between font-normal"
           >
-            {range?.from && range?.to
-              ? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
+            {date?.from && date?.to
+              ? `${date.from.toLocaleDateString()} - ${date.to.toLocaleDateString()}`
               : "Select task duration"}
-            <CalendarIcon />
+            <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
             mode="range"
-            selected={range}
+            selected={date}
             captionLayout="dropdown"
             onSelect={(range) => {
-              setRange(range)
+              setDate(range);
             }}
           />
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

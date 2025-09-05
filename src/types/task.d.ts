@@ -3,8 +3,8 @@ export interface TaskType {
   note?: string;
   tag?: string[];
   duration?: {
-    start: Date;
-    end: Date;
+    start?: Date ;
+    end?: Date;
   };
 }
 

@@ -4,37 +4,51 @@ import InputForm from "@/components/shared/input-form";
 import Modal from "@/components/shared/modal";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { taskSchema } from "../schema/task";
-import { TaskType } from "@/types/task";
-import { useGetTag } from "../hooks/useTask";
-import { Label } from "@/components/ui/label";
+import { useCreateTask, useGetTag } from "../hooks/useTask";
 import TagSelector from "./tag-selector";
-import Calendar23 from "@/components/calendar-23";
 import SubmitBtn from "@/components/shared/submit-btn";
+import DatePicker from "@/components/calendar-23";
+import z from "zod";
 
 interface CreateTaskModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
+export type TaskInputValue = z.input<typeof taskSchema>;
+export type TaskOutputValue = z.output<typeof taskSchema>;
+
+type durationInput = TaskInputValue["duration"];
+
+const toDate = (v: unknown): Date | undefined =>
+  v instanceof Date ? v : undefined;
+const toDateRange = (d: durationInput) =>
+  d ? { from: toDate(d.start), to: toDate(d.end) } : undefined;
+
 const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
+  const mutation = useCreateTask();
   const { data } = useGetTag();
-  const [selected, setSelected] = useState<string[]>([]);
 
-  console.log(selected);
+  console.log(data);
 
-  const form = useForm<TaskType>({
+  const form = useForm<TaskInputValue>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       title: "",
       note: "",
       tag: [],
-      duration: { start: new Date(), end: new Date() },
+      duration: undefined,
     },
     mode: "onSubmit",
   });
+
+  const handleSubmit = async (raw: TaskInputValue) => {
+    const value = taskSchema.parse(raw);
+    console.log(value);
+  };
 
   return (
     <div>
@@ -46,7 +60,11 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
         Pick a due date to keep things on schedule.  "
       >
         <Form {...form}>
-          <form className="flex flex-col gap-3">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            onChange={() => form.clearErrors}
+            className="flex flex-col gap-6"
+          >
             <InputForm
               control={form.control}
               label="Task Title"
@@ -56,19 +74,34 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
             />
             <InputForm
               control={form.control}
-              label="Task Title"
+              label="Task Note"
               placeholder="Enter your task note..."
               name="note"
               inputType="textArea"
             />
-          </form>
-          <TagSelector
-            data={data}
-            setSelected={setSelected}
-            selected={selected}
-          />
-          <Calendar23 />
+            <TagSelector
+              data={data}
+              setSelected={(val) =>
+                form.setValue("tag", val, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true,
+                })
+              }
+              selected={form.watch("tag")}
+            />
+            <DatePicker
+              date={toDateRange(form.watch("duration"))}
+              setDate={(range) => {
+                // เก็บเป็น undefined ถ้าไม่เลือก เพื่อตรงกับ schema
+                form.setValue(
+                  "duration",
+                  range ? { start: range.from, end: range.to } : undefined
+                );
+              }}
+            />
             <SubmitBtn title="Create new task" type="submit" />
+          </form>
         </Form>
       </Modal>
     </div>
