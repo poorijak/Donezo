@@ -4,35 +4,35 @@ import InputForm from "@/components/shared/input-form";
 import Modal from "@/components/shared/modal";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { taskSchema } from "../schema/task";
+import { TaskInputValue, TaskOutputValue, taskSchema } from "../schema/task";
 import { useCreateTask, useGetTag } from "../hooks/useTask";
-import TagSelector from "./tag-selector";
+import TagSelector from "./selection/tag-selector";
 import SubmitBtn from "@/components/shared/submit-btn";
-import DatePicker from "@/components/calendar-23";
+import DatePicker from "@/feature/task/components/selection/calendar";
 import z from "zod";
 
 interface CreateTaskModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+export type TasInferValue = z.infer<typeof taskSchema>;
 
-export type TaskInputValue = z.input<typeof taskSchema>;
-export type TaskOutputValue = z.output<typeof taskSchema>;
 
+
+// ดึง type ของ obj property
 type durationInput = TaskInputValue["duration"];
 
 const toDate = (v: unknown): Date | undefined =>
   v instanceof Date ? v : undefined;
+
 const toDateRange = (d: durationInput) =>
   d ? { from: toDate(d.start), to: toDate(d.end) } : undefined;
 
 const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
-  const mutation = useCreateTask();
+  const { mutate, isSuccess, isPending } = useCreateTask();
   const { data } = useGetTag();
-
-  console.log(data);
 
   const form = useForm<TaskInputValue>({
     resolver: zodResolver(taskSchema),
@@ -46,9 +46,30 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
   });
 
   const handleSubmit = async (raw: TaskInputValue) => {
-    const value = taskSchema.parse(raw);
-    console.log(value);
+    const value: TaskOutputValue = taskSchema.parse(raw);
+
+    mutate({
+      title: value.title,
+      note: value.note,
+      tag: value.tag,
+      duration: {
+        start: value.duration?.start,
+        end: value.duration?.end,
+      },
+    });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset({
+        title: "",
+        note: "",
+        tag: [],
+        duration: undefined,
+      });
+      onOpenChange(false);
+    }
+  }, [isSuccess, onOpenChange, form]);
 
   return (
     <div>
@@ -62,7 +83,7 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            onChange={() => form.clearErrors}
+            onChange={() => form.clearErrors()}
             className="flex flex-col gap-6"
           >
             <InputForm
@@ -93,14 +114,17 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
             <DatePicker
               date={toDateRange(form.watch("duration"))}
               setDate={(range) => {
-                // เก็บเป็น undefined ถ้าไม่เลือก เพื่อตรงกับ schema
-                form.setValue(
-                  "duration",
-                  range ? { start: range.from, end: range.to } : undefined
-                );
+                form.setValue("duration", {
+                  start: range?.from,
+                  end: range?.to,
+                });
               }}
             />
-            <SubmitBtn title="Create new task" type="submit" />
+            <SubmitBtn
+              title="Create new task"
+              type="submit"
+              disabled={isPending}
+            />
           </form>
         </Form>
       </Modal>

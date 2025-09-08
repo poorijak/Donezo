@@ -12,9 +12,9 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
   const user = await authCheck();
 
   return (
-    <div className="mt-20">
+    <div>
       <HeaderUser user={user} />
-      {children}
+      <div className="pt-20">{children}</div>
     </div>
   );
 };

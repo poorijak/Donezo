@@ -68,6 +68,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         <CardContent>
           <div className="flex flex-col gap-5">
             <InputForm
+            inputType="input"
               control={form.control}
               name="email"
               label="Email"
@@ -76,6 +77,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
             />
             {type === "signup" && (
               <InputForm
+              inputType="input"
                 control={form.control}
                 name="name"
                 label="Name"
@@ -84,6 +86,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               />
             )}
             <InputForm
+            inputType="input"
               control={form.control}
               name="password"
               label="Password"
@@ -94,7 +97,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               }
               required
             />
-            <SubmitBtn name={type === "signin" ? "Sign in" : "sign up"} />
+            <SubmitBtn  title={type === "signin" ? "Sign in" : "sign up"} />
           </div>
         </CardContent>
         <CardFooter className="w-full">

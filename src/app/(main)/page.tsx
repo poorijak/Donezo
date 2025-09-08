@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import CreateTaskBTN from "@/feature/task/components/create-task-btn";
+import TaskContainer from "@/feature/task/components/dnd/tasks-container";
 import { authCheck } from "@/lib/routeGuard";
 import React from "react";
 
-const page = async() => {
+const page = async () => {
   const user = await authCheck();
   return (
-    <div className="flex mx-auto justify-center items-center">
+    <div className="flex mx-auto justify-center items-center flex-col gap-8">
       <div className="flex justify-center items-center gap-5 flex-col">
         <h1 className="text-3xl font-bold">
           Create your{" "}
@@ -16,7 +17,11 @@ const page = async() => {
           ✨
         </h1>
 
-        <CreateTaskBTN user={user}/>
+        <CreateTaskBTN user={user} />
+      </div>
+
+      <div>
+        <TaskContainer />
       </div>
     </div>
   );

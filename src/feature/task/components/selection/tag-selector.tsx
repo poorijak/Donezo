@@ -1,11 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { TagType } from "@/types/task";
@@ -19,15 +12,15 @@ interface TagSelectorProps {
 
 const TagSelector = ({ data, setSelected, selected }: TagSelectorProps) => {
   const existingSelected = (dataId: string) => !!selected?.includes(dataId);
-
   const handleSelected = (dataId: string) => {
     const prev = selected ?? [];
     const next = prev.includes(dataId)
       ? prev.filter((id) => id !== dataId)
       : [...prev, dataId];
-
     setSelected(next);
   };
+
+  
 
   return ( 
     <div className="flex flex-col gap-3">

@@ -4,6 +4,8 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { taskSchema } from "../schema/task";
 import z from "zod";
+import { status } from "@prisma/client";
+import { error } from "console";
 
 export const TaskApp = new Hono()
   .get("get-tag", async (c) => {
@@ -36,7 +38,6 @@ export const TaskApp = new Hono()
         end: duration?.end ? new Date(duration.end) : undefined,
       },
     };
-
 
     if (!user?.id) {
       throw new Error("Unauthorized");
@@ -71,4 +72,50 @@ export const TaskApp = new Hono()
     });
 
     return c.json(result);
+  })
+  .patch(
+    "/udpate-status-taks",
+    zValidator(
+      "json",
+      z.object({
+        id: z.string(),
+        status: z.enum(status),
+      })
+    ),
+    async (c) => {
+      const { id, status } = c.req.valid("json");
+
+      const task = await db.todo.findUnique({
+        where: { id },
+      });
+
+      if (!task) {
+        return c.json({ error: "Task not found" }, 404);
+      }
+
+      const result = await db.todo.update({
+        where: { id },
+        data: {
+          status,
+        },
+      });
+
+      return c.json(result);
+    }
+  )
+  .get("/get-task-all", async (c) => {
+    const data = await db.todo.findMany({
+      orderBy: { createdAt: "asc" },
+    });
+
+    const todo = data.map(({ id, title, note, start, end, status }) => ({
+      id,
+      title,
+      note,
+      start,
+      end,
+      status,
+    }));
+
+    return c.json(todo);
   });

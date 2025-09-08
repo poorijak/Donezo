@@ -1,7 +1,27 @@
 import { client } from "@/lib/rpc";
-import { TaskType } from "@/types/task";
+import { TaskInputType, TaskType } from "@/types/task";
+import { status } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import z, { date, string } from "zod";
+
+const taskSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  note: z
+    .string()
+    .nullable()
+    .transform((val) => val ?? null),
+  start: z.coerce
+    .date()
+    .nullable()
+    .transform((val) => val ?? null),
+  end: z.coerce
+    .date()
+    .nullable()
+    .transform((val) => val ?? null),
+  status: z.enum(status),
+});
 
 export const useGetTag = () => {
   const query = useQuery({
@@ -21,12 +41,29 @@ export const useGetTag = () => {
   return query;
 };
 
-export const useCreateTask = () => {
+export const useGetTaskAll = () => {
+  const query = useQuery({
+    queryKey: ["task"],
+    queryFn: async () => {
+      const data = await client.api.task["get-task-all"].$get();
 
-  const queryClinet = useQueryClient()
+      if (!data.ok) {
+        throw new Error("Failed fetching task");
+      }
+
+      const task = await data.json();
+
+      return taskSchema.array().parse(task);
+    },
+  });
+  return query;
+};
+
+export const useCreateTask = () => {
+  const queryClinet = useQueryClient();
 
   const mutate = useMutation({
-    mutationFn: async ({ title, note, tag, duration }: TaskType) => {
+    mutationFn: async ({ title, note, tag, duration }: TaskInputType) => {
       const res = await client.api.task["create-task"].$post({
         json: {
           title,
@@ -51,12 +88,73 @@ export const useCreateTask = () => {
 
     onSuccess: () => {
       toast.success("Create new task success");
-      queryClinet.invalidateQueries({queryKey : ["task"]})
+      queryClinet.invalidateQueries({ queryKey: ["task"] });
     },
     onError: (err) => {
       toast.error(err.message);
     },
   });
 
-  return mutate
+  return mutate;
+};
+
+export const useUpdateStatusTask = () => {
+  const queryClinet = useQueryClient();
+
+  const mutate = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: status }) => {
+      const res = await client.api.task["udpate-status-taks"].$patch({
+        json: {
+          id,
+          status,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Error updating task");
+      }
+
+      const data = await res.json();
+
+      return data;
+    },
+    onMutate: async ({ id, status }) => {
+      await queryClinet.cancelQueries({ queryKey: ["task"] });
+      await queryClinet.cancelQueries({ queryKey: ["task", id] });
+
+      const previousList = queryClinet.getQueryData<TaskType[]>(["task"]);
+      const previousOne = queryClinet.getQueryData<TaskType>(["task", id]);
+
+      if (previousList) {
+        queryClinet.setQueryData<TaskType[]>(["task"], (old) =>
+          old ? old.map((t) => (t.id === id ? { ...t, status } : t)) : old
+        );
+      }
+
+      if (previousOne) {
+        queryClinet.setQueryData<TaskType>(["task", id], (old) =>
+          old ? { ...old, status } : old
+        );
+      }
+
+      return { previousList, previousOne };
+    },
+
+    onError: (err, { id }, ctx) => {
+      if (ctx?.previousList) {
+        queryClinet.setQueryData<TaskType[]>(["task"], ctx.previousList);
+      }
+
+      if (ctx?.previousOne) {
+        queryClinet.setQueryData<TaskType>(["task", id], ctx.previousOne);
+      }
+    },
+
+    onSettled: (_data, _error, { id }) => {
+      queryClinet.invalidateQueries({ queryKey: ["Task"] });
+      queryClinet.invalidateQueries({ queryKey: ["Task", id] });
+    },
+  });
+
+  return mutate;
 };

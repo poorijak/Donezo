@@ -1,17 +1,21 @@
-export interface TaskType {
+import { status, Tag, Todo } from "@prisma/client";
+
+export interface TaskInputType {
   title: string;
   note?: string;
   tag?: string[];
   duration?: {
-    start?: Date ;
+    start?: Date;
     end?: Date;
   };
 }
 
-export interface TagType {
-  id: string;
-  icon: string;
+export type TagType = Omit<Tag, "createdAt" | "updatedAt", "TodoTag">;
+
+export type TaskType = Omit<Todo, "createdAt" | "updatedAt" | "userId"> & {
+};
+
+export type columnType = {
+  id: status;
   title: string;
-  slug: string;
-  color: string;
-}
+};

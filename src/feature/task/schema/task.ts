@@ -1,12 +1,11 @@
 import { z } from "zod";
 
+export type TaskInputValue = z.input<typeof taskSchema>;
+export type TaskOutputValue = z.output<typeof taskSchema>;
+
+
 const MIN_NOTE_LENGTH = 1;
 const MIN_TITLE_LENGTH = 3;
-
-const dayOf = z.preprocess((val) => {
-  if (val === "" || val === null || val === undefined) return undefined;
-  return val;
-}, z.date().optional());
 
 export const taskSchema = z.object({
   title: z
@@ -25,9 +24,11 @@ export const taskSchema = z.object({
   tag: z.array(z.string()).optional(),
   duration: z
     .object({
-      start: dayOf,
-      end: dayOf,
+      start: z.coerce.date(),
+      end: z.coerce.date(),
     })
     .partial()
     .optional(),
 });
+
+
