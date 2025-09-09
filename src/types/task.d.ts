@@ -8,14 +8,17 @@ export interface TaskInputType {
     start?: Date;
     end?: Date;
   };
+  status?: status;
 }
 
-export type TagType = Omit<Tag, "createdAt" | "updatedAt", "TodoTag">;
+export type TagType = Omit<Tag, "createAt" | "updatedAt">;
 
 export type TaskType = Omit<Todo, "createdAt" | "updatedAt" | "userId"> & {
+  tags?: TagType[];
 };
 
 export type columnType = {
   id: status;
   title: string;
+  icon: string;
 };

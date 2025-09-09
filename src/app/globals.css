@@ -123,7 +123,7 @@
 }
 
 :root {
-  --dot-color: #d1d5db; /* สีจุด (light) */
+  --dot-color: #d1d5db82; /* สีจุด (light) */
   --dot-gap: 32px;      /* ระยะห่าง */
   --dot-size: 1.3px;      /* รัศมีจุด */
 }

@@ -3,9 +3,9 @@ import { TaskInputType, TaskType } from "@/types/task";
 import { status } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import z, { date, string } from "zod";
+import z from "zod";
 
-const taskSchema = z.object({
+const taskWithTagsSchema = z.object({
   id: z.string(),
   title: z.string(),
   note: z
@@ -21,6 +21,18 @@ const taskSchema = z.object({
     .nullable()
     .transform((val) => val ?? null),
   status: z.enum(status),
+  tags: z
+    .array(
+      z.object({
+        title: z.string(),
+        id: z.string(),
+        icon: z.string(),
+        slug: z.string(),
+        textColor: z.string(),
+        bgColor: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 export const useGetTag = () => {
@@ -53,7 +65,9 @@ export const useGetTaskAll = () => {
 
       const task = await data.json();
 
-      return taskSchema.array().parse(task);
+      const todoTask = taskWithTagsSchema.array().parse(task);
+
+      return todoTask;
     },
   });
   return query;
@@ -63,7 +77,13 @@ export const useCreateTask = () => {
   const queryClinet = useQueryClient();
 
   const mutate = useMutation({
-    mutationFn: async ({ title, note, tag, duration }: TaskInputType) => {
+    mutationFn: async ({
+      title,
+      note,
+      tag,
+      duration,
+      status,
+    }: TaskInputType) => {
       const res = await client.api.task["create-task"].$post({
         json: {
           title,
@@ -73,13 +93,14 @@ export const useCreateTask = () => {
             start: duration?.start,
             end: duration?.end,
           },
+          status: status,
         },
       });
 
       if (!res.ok) {
         const data = (await res.json()) as { error?: string; message?: string };
         throw new Error(
-          data.error || data.message || "Error creating new task"
+          data.error || data.message || "Error creating new task",
         );
       }
 
@@ -127,13 +148,13 @@ export const useUpdateStatusTask = () => {
 
       if (previousList) {
         queryClinet.setQueryData<TaskType[]>(["task"], (old) =>
-          old ? old.map((t) => (t.id === id ? { ...t, status } : t)) : old
+          old ? old.map((t) => (t.id === id ? { ...t, status } : t)) : old,
         );
       }
 
       if (previousOne) {
         queryClinet.setQueryData<TaskType>(["task", id], (old) =>
-          old ? { ...old, status } : old
+          old ? { ...old, status } : old,
         );
       }
 

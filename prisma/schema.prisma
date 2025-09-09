@@ -99,7 +99,8 @@ model Tag {
   icon      String
   title     String
   slug      String    @unique
-  color     String
+  bgColor     String
+  textColor     String
   createAt  DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   TodoTag   TodoTag[]

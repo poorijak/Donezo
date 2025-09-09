@@ -1,25 +1,29 @@
 import { db } from "@/lib/db";
 
 const InitialTags = [
-  { title: "Study", icon: "📚", slug: "study", color: "3B82F6" },
-  { title: "Work", icon: "💼", slug: "work", color: "6B7280" },
-  { title: "Personal", icon: "👤", slug: "personal", color: "8B5CF6" },
-  { title: "Shopping", icon: "🛒", slug: "shopping", color: "EC4899" },
-  { title: "Meeting", icon: "📅", slug: "meeting", color: "6366F1" },
-  { title: "Creative", icon: "🎨", slug: "creative", color: "14B8A6" },
-  { title: "Finance", icon: "🏦", slug: "finance", color: "F59E0B" },
-  { title: "Travel", icon: "✈️", slug: "travel", color: "F97316" },
-  { title: "Countdown", icon: "⏱️", slug: "fitness", color: "F97316" },
+  { title: "Study", icon: "📚", slug: "study", base: "blue" },
+  { title: "Work", icon: "💼", slug: "work", base: "gray" },
+  { title: "Personal", icon: "👤", slug: "personal", base: "violet" },
+  { title: "Shopping", icon: "🛒", slug: "shopping", base: "pink" },
+  { title: "Meeting", icon: "📅", slug: "meeting", base: "indigo" },
+  { title: "Creative", icon: "🎨", slug: "creative", base: "teal" },
+  { title: "Finance", icon: "🏦", slug: "finance", base: "yellow" },
+  { title: "Travel", icon: "✈️", slug: "travel", base: "orange" },
+  { title: "Countdown", icon: "⏱️", slug: "fitness", base: "orange" },
 ];
 
 const seed = async () => {
   await db.tag.deleteMany();
 
-  for (const tag of InitialTags) {
-    await db.tag.createMany({
-      data: tag,
-    });
-  }
+  const tags = InitialTags.map((tag) => ({
+    title: tag.title,
+    icon: tag.icon,
+    slug: tag.slug,
+    bgColor: `bg-${tag.base}-300`,
+    textColor: `text-${tag.base}-500`,
+  }));
+
+  await db.tag.createMany({ data: tags });
 };
 
 seed();

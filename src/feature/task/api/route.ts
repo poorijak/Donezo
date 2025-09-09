@@ -5,18 +5,18 @@ import { Hono } from "hono";
 import { taskSchema } from "../schema/task";
 import z from "zod";
 import { status } from "@prisma/client";
-import { error } from "console";
 
 export const TaskApp = new Hono()
   .get("get-tag", async (c) => {
     const data = await db.tag.findMany({ orderBy: { createAt: "asc" } });
 
-    const tag = data.map(({ id, icon, title, slug, color }) => ({
+    const tag = data.map(({ id, icon, title, slug, textColor, bgColor }) => ({
       id,
       icon,
       title,
       slug,
-      color,
+      textColor,
+      bgColor,
     }));
     return c.json(tag);
   })
@@ -24,20 +24,18 @@ export const TaskApp = new Hono()
     const body = c.req.valid("json");
     const user = c.get("user");
 
-    const { title, note, tag, duration } = body as {
+    const { title, note, tag, duration, status } = body as {
       title: string;
       note?: string;
       tag: string[];
       duration?: { start?: Date; end?: Date };
+      status?: status;
     };
 
-    const paredBody = {
-      ...body,
-      duration: {
-        start: duration?.start ? new Date(duration.start) : undefined,
-        end: duration?.end ? new Date(duration.end) : undefined,
-      },
-    };
+    if (duration?.start || duration?.end) {
+      duration.start = duration.start ? new Date(duration.start) : undefined;
+      duration.end = duration.end ? new Date(duration.end) : undefined;
+    }
 
     if (!user?.id) {
       throw new Error("Unauthorized");
@@ -48,11 +46,10 @@ export const TaskApp = new Hono()
         data: {
           title,
           note: note,
-          ...(paredBody.duration && {
-            start: paredBody.duration.start,
-            end: paredBody.duration.end,
-          }),
+          start: duration?.start,
+          end: duration?.end,
           userId: user.id,
+          status,
         },
       });
 
@@ -65,7 +62,7 @@ export const TaskApp = new Hono()
                 todoId: todo.id,
               },
             });
-          })
+          }),
         );
       }
       return todo;
@@ -80,7 +77,7 @@ export const TaskApp = new Hono()
       z.object({
         id: z.string(),
         status: z.enum(status),
-      })
+      }),
     ),
     async (c) => {
       const { id, status } = c.req.valid("json");
@@ -101,21 +98,40 @@ export const TaskApp = new Hono()
       });
 
       return c.json(result);
-    }
+    },
   )
   .get("/get-task-all", async (c) => {
     const data = await db.todo.findMany({
       orderBy: { createdAt: "asc" },
+      include: {
+        TodoTag: {
+          include: {
+            tag: {
+              select: {
+                id: true,
+                icon: true,
+                title: true,
+                slug: true,
+                textColor: true,
+                bgColor: true,
+              },
+            },
+          },
+        },
+      },
     });
 
-    const todo = data.map(({ id, title, note, start, end, status }) => ({
-      id,
-      title,
-      note,
-      start,
-      end,
-      status,
-    }));
+    const todo = data.map(
+      ({ id, title, note, start, end, status, TodoTag }) => ({
+        id,
+        title,
+        note,
+        start,
+        end,
+        status,
+        tags: TodoTag.map((tt) => tt.tag),
+      }),
+    );
 
     return c.json(todo);
   });

@@ -2,7 +2,7 @@
 
 import InputForm from "@/components/shared/input-form";
 import Modal from "@/components/shared/modal";
-import { Form } from "@/components/ui/form";
+import { Form, FormMessage } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -12,14 +12,14 @@ import TagSelector from "./selection/tag-selector";
 import SubmitBtn from "@/components/shared/submit-btn";
 import DatePicker from "@/feature/task/components/selection/calendar";
 import z from "zod";
+import { status } from "@prisma/client";
 
 interface CreateTaskModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  status?: status;
 }
 export type TasInferValue = z.infer<typeof taskSchema>;
-
-
 
 // ดึง type ของ obj property
 type durationInput = TaskInputValue["duration"];
@@ -30,7 +30,11 @@ const toDate = (v: unknown): Date | undefined =>
 const toDateRange = (d: durationInput) =>
   d ? { from: toDate(d.start), to: toDate(d.end) } : undefined;
 
-const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
+const CreateTaskModal = ({
+  open,
+  onOpenChange,
+  status,
+}: CreateTaskModalProps) => {
   const { mutate, isSuccess, isPending } = useCreateTask();
   const { data } = useGetTag();
 
@@ -41,6 +45,7 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
       note: "",
       tag: [],
       duration: undefined,
+      status: "pending",
     },
     mode: "onSubmit",
   });
@@ -56,6 +61,7 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
         start: value.duration?.start,
         end: value.duration?.end,
       },
+      status,
     });
   };
 
@@ -66,6 +72,7 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
         note: "",
         tag: [],
         duration: undefined,
+        status: "pending",
       });
       onOpenChange(false);
     }
@@ -111,6 +118,7 @@ const CreateTaskModal = ({ open, onOpenChange }: CreateTaskModalProps) => {
               }
               selected={form.watch("tag")}
             />
+            <FormMessage />
             <DatePicker
               date={toDateRange(form.watch("duration"))}
               setDate={(range) => {

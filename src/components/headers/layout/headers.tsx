@@ -10,7 +10,7 @@ interface HeaderUserProps {
 
 const HeaderUser = ({ user }: HeaderUserProps) => {
   return (
-    <div className="fixed top-0 inset-x-0">
+    <div className="fixed top-0 inset-x-0 z-50">
       <div className="max-w-7xl flex justify-between mx-auto items-center px-4 md:px-8 h-16">
         <h1 className="font-bold text-xl">
           <Link href="/">

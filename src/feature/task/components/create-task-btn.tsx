@@ -26,7 +26,7 @@ const CreateTaskBTN = ({ user }: CreateTaskBTNProps) => {
           <p className="text-red-500 text-xs">Please sign in to create task</p>
         )}
       </div>
-      <CreateTaskModal open={isOpen} onOpenChange={setOpen} />
+      <CreateTaskModal open={isOpen} onOpenChange={setOpen}  />
     </div>
   );
 };

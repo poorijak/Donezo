@@ -1,21 +1,30 @@
 "use client";
 
 import { columnType, TaskType } from "@/types/task";
-import React from "react";
+import React, { useState } from "react";
 import { useGetTaskAll, useUpdateStatusTask } from "../../hooks/useTask";
 import ColumnTask from "./column-task";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+} from "@dnd-kit/core";
+import TaskCard from "./task-card";
 import { Separator } from "@/components/ui/separator";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
 const column: columnType[] = [
-  { id: "pending", title: "To do 💡" },
-  { id: "inProgress", title: "In Progress  ⏱️" },
-  { id: "done", title: "Done  ✅" },
+  { id: "pending", title: "To do", icon: "💡" },
+  { id: "inProgress", title: "In Progress", icon: "⏱️" },
+  { id: "done", title: "Done", icon: "✅" },
 ];
 
 const TaskContainer = () => {
   const { data } = useGetTaskAll();
   const { mutate } = useUpdateStatusTask();
+  const [activeTask, setActiveTask] = useState<TaskType | null>();
+
+  
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -31,10 +40,16 @@ const TaskContainer = () => {
     });
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const taskId = event.active.id as string;
+    const task = data?.find((t) => t.id === taskId) || null;
+    setActiveTask(task);
+  };
+
   return (
-    <div className="min-w-fit md:min-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-28">
-        <DndContext onDragEnd={handleDragEnd}>
+    <div className="mx-auto min-w-fit md:min-w-7xl">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
           {column.map((c) => (
             <div key={c.id} className="">
               <ColumnTask
@@ -43,6 +58,10 @@ const TaskContainer = () => {
               />
             </div>
           ))}
+
+          <DragOverlay>
+            {activeTask ? <TaskCard task={activeTask} /> : null}
+          </DragOverlay>
         </DndContext>
       </div>
     </div>
