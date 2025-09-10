@@ -11,7 +11,6 @@ import {
   DragStartEvent,
 } from "@dnd-kit/core";
 import TaskCard from "./task-card";
-import { Separator } from "@/components/ui/separator";
 
 const column: columnType[] = [
   { id: "pending", title: "To do", icon: "💡" },
@@ -23,8 +22,6 @@ const TaskContainer = () => {
   const { data } = useGetTaskAll();
   const { mutate } = useUpdateStatusTask();
   const [activeTask, setActiveTask] = useState<TaskType | null>();
-
-  
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -60,7 +57,11 @@ const TaskContainer = () => {
           ))}
 
           <DragOverlay>
-            {activeTask ? <TaskCard task={activeTask} /> : null}
+            {activeTask ? (
+              <div className="scale-105 opacity-80 shadow-2xl">
+                <TaskCard task={activeTask} />
+              </div>
+            ) : null}
           </DragOverlay>
         </DndContext>
       </div>

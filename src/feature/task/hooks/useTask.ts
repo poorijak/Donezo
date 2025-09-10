@@ -3,7 +3,8 @@ import { TaskInputType, TaskType } from "@/types/task";
 import { status } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import z from "zod";
+import z, { json } from "zod";
+import { TaskValue } from "../schema/task";
 
 const taskWithTagsSchema = z.object({
   id: z.string(),
@@ -55,7 +56,7 @@ export const useGetTag = () => {
 
 export const useGetTaskAll = () => {
   const query = useQuery({
-    queryKey: ["task"],
+    queryKey: ["Task"],
     queryFn: async () => {
       const data = await client.api.task["get-task-all"].$get();
 
@@ -73,35 +74,22 @@ export const useGetTaskAll = () => {
   return query;
 };
 
-export const useCreateTask = () => {
+export const useTaskMutation = () => {
   const queryClinet = useQueryClient();
 
   const mutate = useMutation({
-    mutationFn: async ({
-      title,
-      note,
-      tag,
-      duration,
-      status,
-    }: TaskInputType) => {
-      const res = await client.api.task["create-task"].$post({
-        json: {
-          title,
-          note,
-          tag,
-          duration: {
-            start: duration?.start,
-            end: duration?.end,
-          },
-          status: status,
-        },
-      });
+    mutationFn: async (data: TaskValue) => {
+      let res: Response;
+
+      if (data.taskId) {
+        res = await client.api.task["update-task"].$patch({ json: data });
+      } else {
+        res = await client.api.task["create-task"].$post({ json: data });
+      }
 
       if (!res.ok) {
         const data = (await res.json()) as { error?: string; message?: string };
-        throw new Error(
-          data.error || data.message || "Error creating new task",
-        );
+        throw new Error(data.error || data.message);
       }
 
       return res;
@@ -109,7 +97,7 @@ export const useCreateTask = () => {
 
     onSuccess: () => {
       toast.success("Create new task success");
-      queryClinet.invalidateQueries({ queryKey: ["task"] });
+      queryClinet.invalidateQueries({ queryKey: ["Task"] });
     },
     onError: (err) => {
       toast.error(err.message);
@@ -174,6 +162,32 @@ export const useUpdateStatusTask = () => {
     onSettled: (_data, _error, { id }) => {
       queryClinet.invalidateQueries({ queryKey: ["Task"] });
       queryClinet.invalidateQueries({ queryKey: ["Task", id] });
+    },
+  });
+
+  return mutate;
+};
+
+export const useDeleteTask = () => {
+  const queryClinet = useQueryClient();
+
+  const mutate = useMutation({
+    mutationFn: async (taskId: string) => {
+      const res = await client.api.task["delete-task"].$delete({
+        json: taskId,
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string; message?: string };
+        throw new Error(data.error || data.message);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Remove task success");
+      queryClinet.invalidateQueries({ queryKey: ["Task"] });
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 

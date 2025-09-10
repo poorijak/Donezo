@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { userType } from "@/types/user";
 import React, { useState } from "react";
-import CreateTaskModal from "./create-task-modal";
+import CreateTaskModal from "./task-form";
+import TaskForm from "./task-form";
 
 interface CreateTaskBTNProps {
   user: userType | null;
@@ -26,7 +27,7 @@ const CreateTaskBTN = ({ user }: CreateTaskBTNProps) => {
           <p className="text-red-500 text-xs">Please sign in to create task</p>
         )}
       </div>
-      <CreateTaskModal open={isOpen} onOpenChange={setOpen}  />
+      <TaskForm open={isOpen} onOpenChange={setOpen}  />
     </div>
   );
 };

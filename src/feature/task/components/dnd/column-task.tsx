@@ -5,9 +5,8 @@ import TaskCard from "./task-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDroppable } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
-import CreateTaskModal from "../create-task-modal";
 import { Plus } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import TaskForm from "../task-form";
 
 interface ColumnTaskProps {
   column: columnType;
@@ -15,15 +14,16 @@ interface ColumnTaskProps {
 }
 
 const ColumnTask = ({ column, task }: ColumnTaskProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 
   const { setNodeRef } = useDroppable({
     id: column.id,
   });
 
   const handleCreateModal = () => {
-    setIsOpen(true);
+    setIsCreateTaskOpen(true);
   };
+
 
   const taskCount = task?.length;
 
@@ -38,35 +38,34 @@ const ColumnTask = ({ column, task }: ColumnTaskProps) => {
         <Badge className="bg-primary/40">{taskCount}</Badge>
       </div>
 
-        {task && task.length > 0 ? (
-          <>
-            <ScrollArea className="h-[300px] w-full md:h-[450px]">
-              <div className="flex flex-col gap-3">
-                {task.map((t) => (
-                  <div key={t.id}>
-                    <TaskCard task={t} />
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </>
-        ) : (
-          <div className="flex w-full items-center justify-center rounded-md border-2 p-5">
-            <p className="text-md text-muted-foreground font-semibold">
-              No task available
-            </p>
-          </div>
-        )}
-      <Button variant="outline" className="text-lg" onClick={handleCreateModal}>
-        <Plus />
+      {task && task.length > 0 ? (
+        <>
+          <ScrollArea className="h-[300px] w-full md:h-[450px]">
+            <div className="flex flex-col gap-3">
+              {task.map((t) => (
+                <div key={t.id}>
+                  <TaskCard task={t} />
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </>
+      ) : (
+        <div className="flex w-full items-center justify-center rounded-md border-2 p-5">
+          <p className="text-md text-muted-foreground font-semibold">
+            No task available
+          </p>
+        </div>
+      )}
+      <Button variant="outline" className="text-xs font-medium" onClick={handleCreateModal}>
+        <Plus />Add Task
       </Button>
 
-      <CreateTaskModal
-        onOpenChange={setIsOpen}
-        open={isOpen}
+      <TaskForm
+        onOpenChange={setIsCreateTaskOpen}
+        open={isCreateTaskOpen}
         status={column.id}
       />
-      
     </div>
   );
 };

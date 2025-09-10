@@ -50,7 +50,7 @@ const InputForm = <T extends FieldValues>({
                   placeholder={placeholder}
                   {...field}
                   required={required}
-                  className="placeholder:text-sm"
+                  className="placeholder:text-sm h-28"
                 />
               )}
             </FormControl>

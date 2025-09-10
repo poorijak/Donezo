@@ -110,6 +110,6 @@ model TodoTag {
   id     String @id @default(uuid())
   todoId String
   tagId  String
-  todo   Todo   @relation(fields: [todoId], references: [id])
-  tag    Tag    @relation(fields: [tagId], references: [id])
+  todo   Todo   @relation(fields: [todoId], references: [id] , onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id] , onDelete: Cascade)
 }

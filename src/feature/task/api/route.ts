@@ -20,86 +20,6 @@ export const TaskApp = new Hono()
     }));
     return c.json(tag);
   })
-  .post("/create-task", zValidator("json", taskSchema), mustAuth, async (c) => {
-    const body = c.req.valid("json");
-    const user = c.get("user");
-
-    const { title, note, tag, duration, status } = body as {
-      title: string;
-      note?: string;
-      tag: string[];
-      duration?: { start?: Date; end?: Date };
-      status?: status;
-    };
-
-    if (duration?.start || duration?.end) {
-      duration.start = duration.start ? new Date(duration.start) : undefined;
-      duration.end = duration.end ? new Date(duration.end) : undefined;
-    }
-
-    if (!user?.id) {
-      throw new Error("Unauthorized");
-    }
-
-    const result = await db.$transaction(async (prisma) => {
-      const todo = await prisma.todo.create({
-        data: {
-          title,
-          note: note,
-          start: duration?.start,
-          end: duration?.end,
-          userId: user.id,
-          status,
-        },
-      });
-
-      if (tag.length > 0) {
-        await Promise.all(
-          tag.map((tagItem) => {
-            return prisma.todoTag.createMany({
-              data: {
-                tagId: tagItem,
-                todoId: todo.id,
-              },
-            });
-          }),
-        );
-      }
-      return todo;
-    });
-
-    return c.json(result);
-  })
-  .patch(
-    "/udpate-status-taks",
-    zValidator(
-      "json",
-      z.object({
-        id: z.string(),
-        status: z.enum(status),
-      }),
-    ),
-    async (c) => {
-      const { id, status } = c.req.valid("json");
-
-      const task = await db.todo.findUnique({
-        where: { id },
-      });
-
-      if (!task) {
-        return c.json({ error: "Task not found" }, 404);
-      }
-
-      const result = await db.todo.update({
-        where: { id },
-        data: {
-          status,
-        },
-      });
-
-      return c.json(result);
-    },
-  )
   .get("/get-task-all", async (c) => {
     const data = await db.todo.findMany({
       orderBy: { createdAt: "asc" },
@@ -134,4 +54,158 @@ export const TaskApp = new Hono()
     );
 
     return c.json(todo);
+  })
+  .post("/create-task", zValidator("json", taskSchema), mustAuth, async (c) => {
+    const body = c.req.valid("json");
+    const user = c.get("user");
+
+    const { title, note, tag, duration, status } = body;
+
+    if (!user?.id) {
+      throw new Error("Unauthorized");
+    }
+
+    const result = await db.$transaction(async (prisma) => {
+      const todo = await prisma.todo.create({
+        data: {
+          title,
+          note: note,
+          start: duration?.start,
+          end: duration?.end,
+          userId: user.id,
+          status,
+        },
+      });
+
+      if (tag && tag.length > 0) {
+        await Promise.all(
+          tag.map((tagItem) => {
+            return prisma.todoTag.createMany({
+              data: {
+                tagId: tagItem,
+                todoId: todo.id,
+              },
+            });
+          }),
+        );
+      }
+      return todo;
+    });
+
+    return c.json(result);
+  })
+
+  .patch(
+    "/udpate-status-taks",
+    zValidator(
+      "json",
+      z.object({
+        id: z.string(),
+        status: z.enum(status),
+      }),
+    ),
+    mustAuth,
+    async (c) => {
+      const { id, status } = c.req.valid("json");
+
+      const task = await db.todo.findUnique({
+        where: { id },
+      });
+
+      if (!task) {
+        return c.json({ error: "Task not found" }, 404);
+      }
+
+      const result = await db.todo.update({
+        where: { id },
+        data: {
+          status,
+        },
+      });
+
+      return c.json(result);
+    },
+  )
+  .patch(
+    "/update-task",
+    zValidator("json", taskSchema),
+    mustAuth,
+    async (c) => {
+      const body = c.req.valid("json");
+      const user = c.get("user");
+
+      const { taskId, title, tag, note, duration, status } = body as {
+        taskId: string;
+        title: string;
+        note: string | undefined;
+        tag: string[];
+        duration?: { start?: Date; end?: Date };
+        status?: status;
+      };
+
+      const todo = await db.todo.findUnique({ where: { id: taskId } });
+
+      if (!todo) {
+        throw new Error("Not found this task");
+      }
+
+      if (!user || user.id !== todo.userId) {
+        throw new Error("Unauthorized");
+      }
+
+      const results = await db.$transaction(async (prisma) => {
+        const todo = await prisma.todo.update({
+          where: {
+            id: taskId,
+          },
+          data: {
+            title,
+            note,
+            start: duration?.start,
+            end: duration?.end,
+            status,
+          },
+        });
+
+        await db.todoTag.deleteMany({
+          where: {
+            todoId: taskId,
+          },
+        });
+
+        if (tag && tag.length > 0) {
+          await db.todoTag.createMany({
+            data: tag.map((tagId) => ({ todoId: taskId, tagId })),
+          });
+        }
+
+        return todo;
+      });
+
+      return c.json(results);
+    },
+  )
+  .delete("/delete-task", mustAuth, async (c) => {
+    const taskId: string = await c.req.json();
+    const user = c.get("user");
+
+    const todo = await db.todo.findUnique({ where: { id: taskId } });
+
+    if (!todo) {
+      throw new Error("Not found this task");
+    }
+
+    if (!user || user.id !== todo.userId) {
+      throw new Error("Unauthorized");
+    }
+
+    await db.todoTag.deleteMany({
+      where: { todoId: taskId },
+    });
+
+    const res = await db.todo.delete({
+      where: { id: taskId },
+    });
+
+    return c.json(res);
   });

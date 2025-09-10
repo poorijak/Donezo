@@ -3,11 +3,13 @@ import { z } from "zod";
 
 export type TaskInputValue = z.input<typeof taskSchema>;
 export type TaskOutputValue = z.output<typeof taskSchema>;
+export type TaskValue = z.infer<typeof taskSchema>;
 
 const MIN_NOTE_LENGTH = 1;
 const MIN_TITLE_LENGTH = 3;
 
 export const taskSchema = z.object({
+  taskId: z.string().optional(),
   title: z
     .string()
     .min(
