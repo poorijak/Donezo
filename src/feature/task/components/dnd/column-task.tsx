@@ -32,10 +32,10 @@ const ColumnTask = ({ column, task }: ColumnTaskProps) => {
       ref={setNodeRef}
       className="m-3 flex h-auto min-w-sm flex-col gap-4 p-2 md:w-auto"
     >
-      <div className="flex items-center gap-3 rounded-md border bg-[#f5f6f7] px-3 py-4 shadow-sm">
+      <div className="flex items-center gap-3 rounded-md border bg-[#f5f6f7] px-4 py-4 shadow-sm">
         <p className="text-lg">{column.icon}</p>
         <h2 className="text-xl font-semibold">{column.title}</h2>
-        <Badge className="bg-primary/40">{taskCount}</Badge>
+        <Badge className="bg-primary/40">{taskCount || "0"}</Badge>
       </div>
 
       {task && task.length > 0 ? (

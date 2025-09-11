@@ -5,7 +5,6 @@ import { authCheck } from "@/lib/routeGuard";
 import React from "react";
 
 const page = async () => {
-  const user = await authCheck();
   return (
     <div className="flex mx-auto justify-center items-center flex-col gap-8">
       <div className="flex justify-center items-center gap-5 flex-col">
@@ -17,7 +16,7 @@ const page = async () => {
           ✨
         </h1>
 
-        <CreateTaskBTN user={user} />
+        <CreateTaskBTN/>
       </div>
 
       <div>

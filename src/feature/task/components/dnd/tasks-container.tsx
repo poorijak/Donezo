@@ -42,7 +42,7 @@ const TaskContainer = () => {
     const task = data?.find((t) => t.id === taskId) || null;
     setActiveTask(task);
   };
-
+ 
   return (
     <div className="mx-auto min-w-fit md:min-w-7xl">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -58,7 +58,7 @@ const TaskContainer = () => {
 
           <DragOverlay>
             {activeTask ? (
-              <div className="scale-105 opacity-80 shadow-2xl">
+              <div className="opacity-80 shadow-2xl">
                 <TaskCard task={activeTask} />
               </div>
             ) : null}

@@ -15,7 +15,7 @@ const ProtectLayout = async ({ children }: ProtectLayoutProps) => {
   }
 
   return (
-    <div>
+    <div className="pt-20">
       <HeaderUser user={user} />
       {children}
     </div>

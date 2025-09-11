@@ -1,7 +1,6 @@
 import Modal from "@/components/shared/modal";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import { useForm } from "react-hook-form";
 import { useDeleteTask } from "../hooks/useTask";
 
 interface DeleteTaskProps {

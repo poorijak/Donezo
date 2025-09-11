@@ -193,3 +193,26 @@ export const useDeleteTask = () => {
 
   return mutate;
 };
+
+export const useGetTaskByStauts = (status: status) => {
+  const query = useQuery({
+    queryKey: ["Task", status],
+    queryFn: async () => {
+      const res = await client.api.task["get-task"].$get({
+        query: { status: status ?? "inProgress" },
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string; message?: string };
+        throw new Error(data.error || data.message);
+      }
+      const data = await res.json();
+
+      const todoTask = taskWithTagsSchema.array().parse(data);
+
+      return todoTask;
+    },
+  });
+
+  return query;
+};

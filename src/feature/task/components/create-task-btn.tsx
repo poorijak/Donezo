@@ -1,16 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { userType } from "@/types/user";
 import React, { useState } from "react";
-import CreateTaskModal from "./task-form";
 import TaskForm from "./task-form";
 
-interface CreateTaskBTNProps {
-  user: userType | null;
+interface CreateTaskBTN {
+  className?: string;
 }
 
-const CreateTaskBTN = ({ user }: CreateTaskBTNProps) => {
+const CreateTaskBTN = ({ className }: CreateTaskBTN) => {
   const [isOpen, setOpen] = useState(false);
 
   const handleCreateModal = () => {
@@ -18,17 +16,14 @@ const CreateTaskBTN = ({ user }: CreateTaskBTNProps) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-2">
+    <>
       <div>
-        <Button disabled={!user} onClick={handleCreateModal}>
+        <Button onClick={handleCreateModal} className={className}>
           Click 🫵🏻 to add your task now!
         </Button>
-        {!user && (
-          <p className="text-red-500 text-xs">Please sign in to create task</p>
-        )}
       </div>
-      <TaskForm open={isOpen} onOpenChange={setOpen}  />
-    </div>
+      <TaskForm open={isOpen} onOpenChange={setOpen} />
+    </>
   );
 };
 

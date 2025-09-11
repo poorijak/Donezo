@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TaskInputValue, TaskOutputValue, taskSchema } from "../schema/task";
 import { useGetTag, useTaskMutation } from "../hooks/useTask";
-import TagSelector from "./selection/tag-selector";
+import TagSelector from "./selectior/tag-selector";
 import SubmitBtn from "@/components/shared/submit-btn";
-import DatePicker from "@/feature/task/components/selection/calendar";
+import DatePicker from "@/feature/task/components/selectior/calendar";
 import { status } from "@prisma/client";
 import { TaskType } from "@/types/task";
 
@@ -62,6 +62,7 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
 
     mutate(
       {
+        taskId: task?.id,
         title: value.title,
         note: value.note,
         tag: value.tag,

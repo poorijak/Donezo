@@ -20,9 +20,62 @@ export const TaskApp = new Hono()
     }));
     return c.json(tag);
   })
-  .get("/get-task-all", async (c) => {
+  .get("/get-task-all", mustAuth, async (c) => {
+    const user = c.get("user");
+
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
     const data = await db.todo.findMany({
       orderBy: { createdAt: "asc" },
+      include: {
+        TodoTag: {
+          include: {
+            tag: {
+              select: {
+                id: true,
+                icon: true,
+                title: true,
+                slug: true,
+                textColor: true,
+                bgColor: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const todo = data.map(
+      ({ id, title, note, start, end, status, TodoTag }) => ({
+        id,
+        title,
+        note,
+        start,
+        end,
+        status,
+        tags: TodoTag.map((tt) => tt.tag),
+      }),
+    );
+
+    return c.json(todo);
+  })
+  .get("/get-task", mustAuth, async (c) => {
+    const status = c.req.query("status") as status;
+    const user = c.get("user");
+
+    console.log(status);
+
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    const data = await db.todo.findMany({
+      where: {
+        userId: user.id,
+        ...(status && status !== null ? { status: status as status } : {}),
+      },
       include: {
         TodoTag: {
           include: {
