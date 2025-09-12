@@ -5,9 +5,9 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { openAPI } from "better-auth/plugins";
 import React from "react";
 import { Resend } from "resend";
+import { db } from "./db";
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
-const prisma = new PrismaClient();
 
 export const auth = betterAuth({
   emailAndPassword: {
@@ -56,7 +56,7 @@ export const auth = betterAuth({
       redirectURI : "http://localhost:3000/api/auth/callback/github"
     }
   },
-  database: prismaAdapter(prisma, {
+  database: prismaAdapter(db, {
     provider: "postgresql",
   }),
   plugins: [openAPI()],

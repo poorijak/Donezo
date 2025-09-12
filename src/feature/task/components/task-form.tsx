@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TaskInputValue, TaskOutputValue, taskSchema } from "../schema/task";
 import { useGetTag, useTaskMutation } from "../hooks/useTask";
-import TagSelector from "./selectior/tag-selector";
+import TagSelector from "./selector/tag-selector";
 import SubmitBtn from "@/components/shared/submit-btn";
-import DatePicker from "@/feature/task/components/selectior/calendar";
+import DatePicker from "@/feature/task/components/selector/calendar";
 import { status } from "@prisma/client";
 import { TaskType } from "@/types/task";
 
@@ -67,7 +67,7 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
         note: value.note,
         tag: value.tag,
         duration: { start: value.duration?.start, end: value.duration?.end },
-        status: status,
+        status: status ?? "inProgress",
       },
       {
         onSuccess: (_, variable) => {
@@ -93,7 +93,7 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
       <Modal
         open={open}
         onOpenChange={onOpenChange}
-        title={task ? "Update Task" : "Create Task"}
+        title={task ? "Edit Task" : "Create Task"}
         desc={
           task
             ? "Edit your task details, update tags or notes, and adjust the due date as needed."

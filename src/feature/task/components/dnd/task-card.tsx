@@ -1,17 +1,9 @@
-import { Badge } from "@/components/ui/badge";
-import formatDate from "@/lib/format/formatDate";
 import formatStatus from "@/lib/format/formatStatus";
 import { cn, getStatusColor, getTagsColor } from "@/lib/utils";
 import { TaskType } from "@/types/task";
 import { useDraggable } from "@dnd-kit/core";
-import {
-  CalendarClock,
-  Ellipsis,
-  GripVertical,
-  Pencil,
-  Trash2,
-} from "lucide-react";
-import React, { useState } from "react";
+import { CalendarClock, Ellipsis, Pencil, Trash2 } from "lucide-react";
+import React, { useState, useTransition } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -22,15 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import TaskForm from "../task-form";
 import DeleteTask from "../delete-task-modal";
+import ChangeStatusButton from "../change-status-button";
+import { formatDateToDDMMYY } from "@/lib/format/formatDate";
 
 type TaskCardProps = {
   task: TaskType;
+  calendarPage?: boolean;
 };
 
-const TaskCard = ({ task }: TaskCardProps) => {
+const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
   });
@@ -40,15 +34,16 @@ const TaskCard = ({ task }: TaskCardProps) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div
         {...attributes}
         {...listeners}
         ref={setNodeRef}
         style={style}
-        className="bg-card relative flex cursor-grab items-center justify-between rounded-md border p-4 shadow-sm"
+        className="bg-card relative cursor-grab rounded-md border p-4 shadow-sm"
       >
         <div className="flex flex-col gap-3">
+          {/* header */}
           <div className="flex flex-wrap items-center gap-3 text-xs">
             <p
               className={cn(
@@ -74,9 +69,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
             ))}
           </div>
 
+          {/* content */}
+
           <div className="flex flex-col gap-2">
             <h3 className="text-md font-semibold">{task.title}</h3>
-            <div className="flex w-80 flex-col">
+            <div className="flex w-full flex-col">
               {task.note ? (
                 <p className="text-muted-foreground/80 line-clamp-2 text-sm font-medium break-words">
                   {task.note}
@@ -87,13 +84,25 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 </p>
               )}
             </div>
-            <div>
+            <div className="flex justify-between">
               <p className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
                 <span>
                   <CalendarClock size={16} />
                 </span>
-                {formatDate(task.end)}
+                {formatDateToDDMMYY(task.end)}
               </p>
+
+              <div className="flex md:hidden">
+                <ChangeStatusButton status={task.status} id={task.id} />
+              </div>
+
+              <div className="hidden md:flex">
+                {calendarPage && (
+                  <>
+                    <ChangeStatusButton status={task.status} id={task.id} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -118,7 +127,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 <Pencil />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-400" onClick={() =>  setIsDeleteOpen(true)}>
+              <DropdownMenuItem
+                className="text-red-400"
+                onClick={() => setIsDeleteOpen(true)}
+              >
                 <Trash2 className="text-red-400" />
                 Remove
               </DropdownMenuItem>

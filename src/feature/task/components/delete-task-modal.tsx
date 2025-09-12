@@ -24,8 +24,10 @@ const DeleteTask = ({ taskId, open, onOpenChange }: DeleteTaskProps) => {
         onOpenChange={onOpenChange}
       >
         <div className="flex justify-end gap-4">
-          <Button variant="destructive" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button variant="outline" onClick={handleDeleteTask}>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button variant="destructive" onClick={handleDeleteTask}>
             Remove
           </Button>
         </div>

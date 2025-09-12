@@ -3,13 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { useGetTaskByStauts } from "../hooks/useTask";
 import { useSearchParams } from "next/navigation";
 import { status } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import TaskCard from "./dnd/task-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SkeletonTask from "@/components/shared/skeleton-task";
+import AddButton from "./add-button";
+import { TaskType } from "@/types/task";
 
 const taskStatus = [
   { label: "Todo", value: "todo", href: "/calendar?status=pending" },
@@ -21,22 +24,24 @@ const taskStatus = [
   { label: "Done", value: "done", href: "/calendar?status=done" },
 ];
 
-const TaskPanel = () => {
-  const status = useSearchParams().get("status") as status;
+interface TaskPanelProps {
+  task: TaskType[] | undefined;
+  isPending: boolean;
+  status : status
+}
 
-  const { data } = useGetTaskByStauts(status);
-
-  console.log(data);
-
+const TaskPanel = ({ task, isPending , status }: TaskPanelProps) => {
   return (
     <div>
-      <Card>
+      <Card className="relative">
         <CardHeader className="flex w-full items-center justify-between">
-          <CardTitle className="text-xl font-semibold">My Task</CardTitle>
+          <CardTitle className="text-xl font-semibold md:text-2xl">
+            My Task
+          </CardTitle>
           <Tabs defaultValue="inProgress">
             <TabsList>
               {taskStatus.map((s, i) => (
-                <TabsTrigger key={i} value={s.value} asChild>
+                <TabsTrigger className="p-3" key={i} value={s.value} asChild>
                   <Link href={s.href}>{s.label}</Link>
                 </TabsTrigger>
               ))}
@@ -47,13 +52,26 @@ const TaskPanel = () => {
         <Separator />
 
         <CardContent>
-          <ScrollArea className="h-[500px]">
-            <div className="flex flex-col gap-3">
-              {data?.map((task) => (
-                <TaskCard key={task.id} task={task} />
-              ))}
+          <div className="flex flex-col gap-3">
+            {isPending ? (
+              <>
+                <SkeletonTask />
+              </>
+            ) : (
+              <>
+                <ScrollArea className="h-[350px] md:h-[500px]">
+                  <div className="flex flex-col gap-3">
+                    {task?.map((task) => (
+                      <TaskCard key={task.id} task={task} calendarPage={true} />
+                    ))}
+                  </div>
+                </ScrollArea>
+              </>
+            )}
+            <div className="w-full">
+              <AddButton status={status} className="w-full" />
             </div>
-          </ScrollArea>
+          </div>
         </CardContent>
       </Card>
     </div>

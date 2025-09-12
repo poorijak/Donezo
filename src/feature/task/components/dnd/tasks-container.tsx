@@ -19,7 +19,7 @@ const column: columnType[] = [
 ];
 
 const TaskContainer = () => {
-  const { data } = useGetTaskAll();
+  const { data , isPending } = useGetTaskAll();
   const { mutate } = useUpdateStatusTask();
   const [activeTask, setActiveTask] = useState<TaskType | null>();
 
@@ -44,14 +44,15 @@ const TaskContainer = () => {
   };
  
   return (
-    <div className="mx-auto min-w-fit md:min-w-7xl">
+    <div className="mx-5 md:mx-10 min-w-fit md:min-w-7xl">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
           {column.map((c) => (
-            <div key={c.id} className="">
+            <div key={c.id} >
               <ColumnTask
                 column={c}
                 task={data?.filter((t) => t.status === c.id)}
+                isPending={isPending}
               />
             </div>
           ))}
