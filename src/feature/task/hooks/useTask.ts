@@ -1,9 +1,9 @@
 import { client } from "@/lib/rpc";
-import { TaskInputType, TaskType } from "@/types/task";
+import { TaskType } from "@/types/task";
 import { status } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import z, { json } from "zod";
+import z from "zod";
 import { TaskValue } from "../schema/task";
 
 const taskWithTagsSchema = z.object({

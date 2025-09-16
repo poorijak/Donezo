@@ -124,8 +124,8 @@
 
 :root {
   --dot-color: #d1d5db82; /* สีจุด (light) */
-  --dot-gap: 32px;      /* ระยะห่าง */
-  --dot-size: 1.3px;      /* รัศมีจุด */
+  --dot-gap: 32px; /* ระยะห่าง */
+  --dot-size: 1.3px; /* รัศมีจุด */
 }
 .dark {
   --dot-color: #334155; /* สีจุด (dark) */
@@ -135,8 +135,52 @@
 @layer utilities {
   .bg-dot-grid {
     background-color: var(--background); /* ใช้สีพื้นหลังจากธีมของคุณ */
-    background-image: radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size));
+    background-image: radial-gradient(
+      circle,
+      var(--dot-color) var(--dot-size),
+      transparent var(--dot-size)
+    );
     background-size: var(--dot-gap) var(--dot-gap);
     background-position: 0 0;
   }
+}
+
+.fc .fc-button {
+  @apply bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md border shadow-xs;
+}
+
+.fc-toolbar-title {
+  @apply font-medium;
+}
+
+.fc .fc-button .fc-icon {
+  @apply text-primary;
+}
+
+.fc .fc-button-primary:disabled {
+  @apply bg-primary text-card hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md border shadow-xs transition-colors md:border-none;
+}
+
+.fc .fc-button-primary {
+  @apply text-primary border;
+}
+
+.fc .fc-button:disabled {
+  @apply px-6 py-1 opacity-100;
+}
+
+.fc .fc-daygrid-day-number {
+  @apply font-medium;
+}
+
+.fc .fc-scrollgrid {
+  @apply rounded-md;
+}
+
+.fc .fc-today-button {
+  @apply border-2 px-6 py-1;
+}
+
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  @apply m-0;
 }

@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 interface ModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  title: string;
-  desc?: string;
+  title: string | undefined;
+  desc?: string | null | undefined;
   children: React.ReactNode;
   className?: string;
 }

@@ -53,19 +53,22 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
             >
               {formatStatus(task.status)}
             </p>
-            <Separator orientation="vertical" className="self-stretch" />
 
+            {task.tags && task.tags.length > 0 && (
+              <Separator orientation="vertical" className="self-stretch" />
+            )}
             {task.tags?.map((tt) => (
-              <p
-                className={cn(
-                  "flex items-center gap-2 rounded-sm px-2 py-1",
-                  getTagsColor(tt.slug),
-                )}
-                key={tt.id}
-              >
-                <span className="text-xs">{tt.icon}</span>
-                {tt.title}
-              </p>
+              <div key={tt.id}>
+                <p
+                  className={cn(
+                    "flex items-center gap-2 rounded-sm px-2 py-1",
+                    getTagsColor(tt.slug),
+                  )}
+                >
+                  <span className="text-xs">{tt.icon}</span>
+                  {tt.title}
+                </p>
+              </div>
             ))}
           </div>
 

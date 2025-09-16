@@ -220,14 +220,14 @@ export const TaskApp = new Hono()
           },
         });
 
-        await db.todoTag.deleteMany({
+        await prisma.todoTag.deleteMany({
           where: {
             todoId: taskId,
           },
         });
 
         if (tag && tag.length > 0) {
-          await db.todoTag.createMany({
+          await prisma.todoTag.createMany({
             data: tag.map((tagId) => ({ todoId: taskId, tagId })),
           });
         }

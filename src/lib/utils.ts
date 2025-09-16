@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getStatusColor = (status: status) => {
+export const getStatusColor = (status: status | undefined) => {
   switch (status) {
     case "pending":
       return "bg-yellow-100 , text-yellow-500";

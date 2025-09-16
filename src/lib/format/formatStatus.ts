@@ -1,6 +1,6 @@
 import { status } from "@prisma/client";
 
-const formatStatus = (status: status) => {
+const formatStatus = (status: status | undefined) => {
   switch (status) {
     case "pending":
       return "To do";
