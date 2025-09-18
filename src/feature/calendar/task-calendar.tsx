@@ -6,6 +6,7 @@ import CalendarSection from "./calendar-section";
 import { useSearchParams } from "next/navigation";
 import { useGetTaskByStauts } from "../task/hooks/useTask";
 import { status } from "@prisma/client";
+import { TaskType } from "@/types/task";
 
 const TaskCalendar = () => {
   const status = useSearchParams().get("status") as status;

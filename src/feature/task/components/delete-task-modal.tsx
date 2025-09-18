@@ -1,6 +1,6 @@
 import Modal from "@/components/shared/modal";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDeleteTask } from "../hooks/useTask";
 
 interface DeleteTaskProps {
@@ -10,16 +10,23 @@ interface DeleteTaskProps {
 }
 
 const DeleteTask = ({ taskId, open, onOpenChange }: DeleteTaskProps) => {
-  const { mutate } = useDeleteTask();
+  const { mutate , isSuccess } = useDeleteTask();
 
   const handleDeleteTask = () => {
     mutate(taskId);
+
   };
+
+  useEffect(() => {
+if (isSuccess) {
+  onOpenChange(false)
+}
+  } , [onOpenChange , isSuccess])
   return (
     <div>
       <Modal
         title="Remove Task"
-        desc="Are you sure to delete the product?"
+        desc="Are you sure to remove the task in donezo?"
         open={open}
         onOpenChange={onOpenChange}
       >

@@ -14,7 +14,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
   return (
     <div>
       <HeaderUser user={user} />
-      <div className="pt-20">{children}</div>
+      <div>{children}</div>
     </div>
   );
 };

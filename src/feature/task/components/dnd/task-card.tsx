@@ -3,7 +3,7 @@ import { cn, getStatusColor, getTagsColor } from "@/lib/utils";
 import { TaskType } from "@/types/task";
 import { useDraggable } from "@dnd-kit/core";
 import { CalendarClock, Ellipsis, Pencil, Trash2 } from "lucide-react";
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -15,7 +15,8 @@ import {
 import TaskForm from "../task-form";
 import DeleteTask from "../delete-task-modal";
 import ChangeStatusButton from "../change-status-button";
-import { formatDateToDDMMYY } from "@/lib/format/formatDate";
+import { checkDueDate, formatDateToDDMMYY } from "@/lib/format/formatDate";
+import "animate.css";
 
 type TaskCardProps = {
   task: TaskType;
@@ -88,17 +89,18 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
               )}
             </div>
             <div className="flex justify-between">
-              <p className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                <span>
-                  <CalendarClock size={16} />
-                </span>
-                {formatDateToDDMMYY(task.end)}
+              <p
+                className={cn(
+                  "text-muted-foreground flex items-center gap-2 text-sm font-medium",
+                  checkDueDate(task.end) && "text-red-400",
+                )}
+              >
+                <CalendarClock size={16} />
+                <span>{formatDateToDDMMYY(task.end)}</span>
               </p>
-
               <div className="flex md:hidden">
                 <ChangeStatusButton status={task.status} id={task.id} />
               </div>
-
               <div className="hidden md:flex">
                 {calendarPage && (
                   <>

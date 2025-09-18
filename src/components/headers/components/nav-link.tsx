@@ -13,7 +13,7 @@ const DesktopNavlink = () => {
   console.log(pathName);
 
   const NAVLINK = [
-    { title: "Task Board", href: "/", icon: <ClipboardList /> },
+    { title: "Task Board", href: "/task", icon: <ClipboardList /> },
     { title: "Task Calendar", href: "/calendar", icon: <CalendarDaysIcon /> },
   ];
 

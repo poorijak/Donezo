@@ -54,10 +54,6 @@ export const StyleWrapper = styled.div`
       border-style: 1px solid var(--primary);
     }
 
-    .fc .fc-button-primary {
-      border: none;
-    }
-
     .fc .fc-button .fc-icon:hover {
     color : var(--card)
 } 

@@ -30,7 +30,7 @@ const Modal = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className={cn("sm:max-w-sm", className)}>
           <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
+             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{desc}</DialogDescription>
           </DialogHeader>
 

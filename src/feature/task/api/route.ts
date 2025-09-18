@@ -23,12 +23,14 @@ export const TaskApp = new Hono()
   .get("/get-task-all", mustAuth, async (c) => {
     const user = c.get("user");
 
+    const today = new Date();
+
     if (!user) {
       throw new Error("Unauthorized");
     }
 
     const data = await db.todo.findMany({
-      orderBy: { createdAt: "asc" },
+      where: { userId: user.id },
       include: {
         TodoTag: {
           include: {
@@ -47,7 +49,16 @@ export const TaskApp = new Hono()
       },
     });
 
-    const todo = data.map(
+    const sorted = data.sort((a, b) => {
+      if (!a.end) return 1;
+      if (!b.end) return -1;
+      return (
+        Math.abs(new Date(a.end).getTime() - today.getTime()) -
+        Math.abs(new Date(b.end).getTime() - today.getTime())
+      );
+    });
+
+    const todo = sorted.map(
       ({ id, title, note, start, end, status, TodoTag }) => ({
         id,
         title,

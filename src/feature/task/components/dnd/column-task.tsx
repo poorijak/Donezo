@@ -43,7 +43,7 @@ const ColumnTask = ({ column, task, isPending }: ColumnTaskProps) => {
                 <ScrollArea className="h-[300px] w-full md:h-[450px]">
                   <div className="flex flex-col gap-3">
                     {task.map((t) => (
-                      <div key={t.id}>
+                      <div key={t.id} >
                         <TaskCard task={t} />
                       </div>
                     ))}
