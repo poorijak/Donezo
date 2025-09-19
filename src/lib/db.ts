@@ -13,6 +13,7 @@ export const db =
         statementCacheSize: 0,
       },
     },
+    // eslint-disable-next-line
   } as any);
 
 if (process.env.NODE_ENV !== "production") {
