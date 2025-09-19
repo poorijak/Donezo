@@ -11,7 +11,7 @@ interface userTypeComp {
 export const UserAvatar = ({ user }: userTypeComp) => (
   <Avatar className="size-16">
     <AvatarImage
-      src={user?.image || "/no-user-profile.jpeg"}
+      src={user?.image || "/No-user-profile.jpeg"}
       alt={user?.name || "user avatar"}
     />
   </Avatar>
@@ -21,7 +21,7 @@ const UserAvatarSmall = ({ user }: userTypeComp) => (
   <div>
     <Avatar>
       <AvatarImage
-        src={user?.image || "/no-user-profile.jpeg"}
+        src={user?.image || "/No-user-profile.jpeg"}
         alt={user?.name || "user avatar"}
       />
     </Avatar>

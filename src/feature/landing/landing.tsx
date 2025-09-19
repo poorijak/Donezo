@@ -30,14 +30,14 @@ const Landing = () => {
         className="absolute top-20 left-0 hidden h-[175px] w-[150px] md:left-0 md:block md:h-[300px] md:w-[250px]"
       />
       <Image
-        src={"/pink.png"}
+        src={"/Pink.png"}
         alt="asset imgae"
         width={200}
         height={200}
         className="absolute top-20 hidden  right-0 h-[175px] w-[150px] md:block md:h-[350px] md:w-[250px]"
       />
       <Image
-        src={"/folder2.png"}
+        src={"/Folder2.png"}
         alt="asset imgae"
         width={250}
         height={250}
@@ -45,7 +45,7 @@ const Landing = () => {
       />
       
       <Image
-        src={"/folder1.png"}
+        src={"/Folder1.png"}
         alt="asset imgae"
         width={250}
         height={250}
