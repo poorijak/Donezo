@@ -41,18 +41,12 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGEL_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      redirectURI: "http://localhost:3000/api/auth/callback/google",
-    },
-    facebook: {
-      clientId: process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
-      redirectURI: "http://localhost:3000/api/auth/callback/facebook",
-      scope: ["email", "public_profile"],
+      redirectURI: "https://donez0.vercel.app/api/auth/callback/google",
     },
     github : {
       clientId : process.env.GITHUB_CLIENT_ID as string,
       clientSecret : process.env.GITHUB_CLIENT_SECRET as string,
-      redirectURI : "http://localhost:3000/api/auth/callback/github"
+      redirectURI : "https://donez0.vercel.app/api/auth/callback/github"
     }
   },
   database: prismaAdapter(db, {
