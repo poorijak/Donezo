@@ -37,7 +37,7 @@ const Landing = () => {
         className="absolute top-20 hidden  right-0 h-[175px] w-[150px] md:block md:h-[350px] md:w-[250px]"
       />
       <Image
-        src={"/Folder2.png"}
+        src={"/folder2.png"}
         alt="asset imgae"
         width={250}
         height={250}
