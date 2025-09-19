@@ -40,14 +40,20 @@ export const authApp = new Hono()
     return c.json({ status: res.status });
   })
   .post("/sign-in/social", async (c) => {
-    const body = await c.req.json();
-    const res = await auth.api.signInSocial({
-      body,
-      asResponse: true,
-    });
+    try {
+      const body = await c.req.json();
+      const res = await auth.api.signInSocial({
+        body,
+        asResponse: true,
+      });
 
-    return res;
+      return res;
+    } catch (err) {
+      console.error("🔥 signInSocial error", err);
+      return c.json({ error: "Sign-in failed" }, 500);
+    }
   })
+
   .post("/sigin-out", async (c) => {
     await auth.api.signOut({ headers: await headers() });
 
