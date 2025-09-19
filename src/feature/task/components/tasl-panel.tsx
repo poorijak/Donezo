@@ -4,8 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import React from "react";
-import { useGetTaskByStauts } from "../hooks/useTask";
-import { useSearchParams } from "next/navigation";
 import { status } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import TaskCard from "./dnd/task-card";

@@ -17,6 +17,14 @@ const AddButton = ({ status, className }: AddButtonStatus) => {
     setIsOpen(true);
   };
 
+  const statusLabel = () => {
+    if (status === "pending") return "todo"
+    if (status === "inProgress") return "in progress"
+    if (status === "done") return "done"
+
+    return "in progress"
+  }
+
   return (
     <div>
       <Button
@@ -25,7 +33,7 @@ const AddButton = ({ status, className }: AddButtonStatus) => {
         onClick={handleCreateModal}
       >
         <Plus />
-        Add Task
+        Add {statusLabel()} task
       </Button>
 
       <TaskForm onOpenChange={setIsOpen} open={isOpen} status={status} />

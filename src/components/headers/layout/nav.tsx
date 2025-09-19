@@ -3,7 +3,6 @@ import DesktopHeaders from "../menu/desktop-user-menu";
 import { userType } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import DesktopNavlink from "../components/nav-link";
 import MobileUserMenu from "../menu/mobile-user-menu";
 
 interface NavbarProps {

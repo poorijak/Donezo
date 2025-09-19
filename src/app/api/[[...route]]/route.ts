@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { showRoutes } from "hono/dev";
 import { HTTPException } from "hono/http-exception";
 import { handle } from "hono/vercel";
 import { authApp } from "@/feature/auth/api/route";

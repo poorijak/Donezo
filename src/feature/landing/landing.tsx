@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
-import CreateTaskBTN from "../task/components/create-task-btn";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -44,6 +43,7 @@ const Landing = () => {
         height={250}
         className="absolute bottom-0 left-0 hidden h-[75px] w-[150px] md:block md:h-[120px] md:w-[250px]"
       />
+      
       <Image
         src={"/folder1.png"}
         alt="asset imgae"

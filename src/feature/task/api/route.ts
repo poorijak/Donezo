@@ -76,6 +76,8 @@ export const TaskApp = new Hono()
     const status = c.req.query("status") as status;
     const user = c.get("user");
 
+    const today = new Date()
+
     console.log(status);
 
     if (!user) {
@@ -105,7 +107,16 @@ export const TaskApp = new Hono()
       },
     });
 
-    const todo = data.map(
+    const sorted = data.sort((a, b) => {
+      if (!a.end) return 1;
+      if (!b.end) return -1;
+      return (
+        Math.abs(new Date(a.end).getTime() - today.getTime()) -
+        Math.abs(new Date(b.end).getTime() - today.getTime())
+      );
+    });
+
+    const todo = sorted.map(
       ({ id, title, note, start, end, status, TodoTag }) => ({
         id,
         title,

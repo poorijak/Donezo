@@ -17,6 +17,7 @@ import DeleteTask from "../delete-task-modal";
 import ChangeStatusButton from "../change-status-button";
 import { checkDueDate, formatDateToDDMMYY } from "@/lib/format/formatDate";
 import "animate.css";
+import { Badge } from "@/components/ui/badge";
 
 type TaskCardProps = {
   task: TaskType;
@@ -29,6 +30,8 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
   });
+
+  const dueStatus = checkDueDate(task.end);
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -92,11 +95,22 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
               <p
                 className={cn(
                   "text-muted-foreground flex items-center gap-2 text-sm font-medium",
-                  checkDueDate(task.end) && "text-red-400",
+                  dueStatus === "Overdue" && "text-red-400",
+                  dueStatus === "Upcoming" && "text-yellow-500",
                 )}
               >
                 <CalendarClock size={16} />
                 <span>{formatDateToDDMMYY(task.end)}</span>
+                {dueStatus && (
+                  <Badge
+                    className={cn(
+                      dueStatus === "Overdue" && "bg-red-400",
+                      dueStatus === "Upcoming" && "bg-yellow-400",
+                    )}
+                  >
+                    {dueStatus}
+                  </Badge>
+                )}
               </p>
               <div className="flex md:hidden">
                 <ChangeStatusButton status={task.status} id={task.id} />

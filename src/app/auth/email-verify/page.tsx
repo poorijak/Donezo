@@ -1,6 +1,5 @@
 import AuthEmailVerify from "@/feature/auth/components/auth-email-verify";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import React from "react";
 
 const page = async () => {

@@ -10,9 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import React from "react";
 import { userType } from "@/types/user";
-import Link from "next/link";
-import Image from "next/image";
-import UserAvatarSmall, { UserAvatar } from "../components/user-comp";
+import { UserAvatar } from "../components/user-comp";
 import { useSignOut } from "@/feature/auth/hooks/auth/useAuthQuery";
 import { MenuIcon } from "@/components/ui/MenuIcon";
 

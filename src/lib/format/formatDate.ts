@@ -23,6 +23,9 @@ export const checkDueDate = (date: Date | null , twoholdDay: number = 2) => {
 
   const diff = due.diff(now, "day");
 
+  if (diff < 0) return "Overdue"
+  if (diff <= twoholdDay) return "Upcoming"
 
-  return  diff <= twoholdDay
+
+  return  null
 };

@@ -2,7 +2,6 @@
 import { authClient } from "@/lib/auth-client";
 import { client } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { error } from "console";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
