@@ -2,6 +2,7 @@ import Modal from "@/components/shared/modal";
 import { Button } from "@/components/ui/button";
 import React, { useEffect } from "react";
 import { useDeleteTask } from "../hooks/useTask";
+import SubmitBtn from "@/components/shared/submit-btn";
 
 interface DeleteTaskProps {
   taskId: string;
@@ -10,7 +11,7 @@ interface DeleteTaskProps {
 }
 
 const DeleteTask = ({ taskId, open, onOpenChange }: DeleteTaskProps) => {
-  const { mutate , isSuccess } = useDeleteTask();
+  const { mutate , isSuccess , isPending } = useDeleteTask();
 
   const handleDeleteTask = () => {
     mutate(taskId);
@@ -34,9 +35,7 @@ if (isSuccess) {
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={handleDeleteTask}>
-            Remove
-          </Button>
+          <SubmitBtn title="Remove" pending={isPending} variant={"destructive"}  onClick={handleDeleteTask} />
         </div>
       </Modal>
     </div>

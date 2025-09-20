@@ -30,11 +30,11 @@ const toDateRange = (d: durationInput) =>
   d ? { from: toDate(d.start), to: toDate(d.end) } : undefined;
 
 const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
-  const { mutate, isPending } = useTaskMutation();
+  const { mutate, isPending  } = useTaskMutation();
 
   const { data } = useGetTag();
 
-  console.log(data);
+  console.log(isPending);
   
 
   const form = useForm<TaskInputValue>({
@@ -147,7 +147,7 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
             <SubmitBtn
               title={task ? "Update Task" : "Create new task"}
               type="submit"
-              disabled={isPending}
+              pending={isPending || form.formState.isSubmitting}
             />
           </form>
         </Form>

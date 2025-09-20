@@ -12,13 +12,14 @@ import React from "react";
 import { userType } from "@/types/user";
 import UserAvatarSmall, { UserAvatar } from "../components/user-comp";
 import { useSignOut } from "@/feature/auth/hooks/auth/useAuthQuery";
+import SubmitBtn from "@/components/shared/submit-btn";
 
 interface DesktopHeadersProp {
   user: userType | null;
 }
 
 const DesktopHeaders = ({ user }: DesktopHeadersProp) => {
-  const signOut = useSignOut();
+  const { mutate , isPending } = useSignOut();
 
   return (
     <div>
@@ -39,9 +40,7 @@ const DesktopHeaders = ({ user }: DesktopHeadersProp) => {
             Hi 👋 {user?.name}
           </DropdownMenuLabel>
           <DropdownMenuItem asChild className="mb-3">
-            <Button size="sm" onClick={() => signOut.mutate()}>
-              Sign out
-            </Button>
+            <SubmitBtn title="Sign out" size="sm"  pending={isPending} onClick={() => mutate()}/>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

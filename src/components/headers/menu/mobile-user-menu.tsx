@@ -13,13 +13,14 @@ import { userType } from "@/types/user";
 import { UserAvatar } from "../components/user-comp";
 import { useSignOut } from "@/feature/auth/hooks/auth/useAuthQuery";
 import { MenuIcon } from "@/components/ui/MenuIcon";
+import SubmitBtn from "@/components/shared/submit-btn";
 
 interface MobileUserMenuProps {
   user: userType | null;
 }
 
 const MobileUserMenu = ({ user }: MobileUserMenuProps) => {
-  const signOut = useSignOut();
+  const { mutate, isPending } = useSignOut();
 
   return (
     <div>
@@ -33,9 +34,9 @@ const MobileUserMenu = ({ user }: MobileUserMenuProps) => {
         <DropdownMenuContent
           align="end"
           sideOffset={5}
-          className="flex justify-center flex-col items-center "
+          className="flex flex-col items-center justify-center"
         >
-          <DropdownMenuLabel className="flex flex-col gap-2 items-center text-xs">
+          <DropdownMenuLabel className="flex flex-col items-center gap-2 text-xs">
             <UserAvatar user={user} />
             <p>
               {" "}
@@ -43,9 +44,7 @@ const MobileUserMenu = ({ user }: MobileUserMenuProps) => {
             </p>
           </DropdownMenuLabel>
           <DropdownMenuItem asChild className="mb-3">
-            <Button size="sm" onClick={() => signOut.mutate()}>
-              Sign out
-            </Button>
+            <SubmitBtn title="Sign out" size="sm" pending={isPending} onClick={() => mutate()} />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
