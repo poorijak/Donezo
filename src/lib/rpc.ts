@@ -1,5 +1,4 @@
 import { appType } from "@/app/api/[[...route]]/route";
 import { hc } from "hono/client";
 
-
-export const client  = hc<appType>(`${process.env.BETTER_AUTH_URL!}/api`)
+export const client = hc<appType>(process.env.NEXT_PUBLIC_VERCEL_URL!);
