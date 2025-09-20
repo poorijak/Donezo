@@ -29,7 +29,6 @@ const CalendarSection = ({ task }: CalendarSectionProp) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTask, setActiveTask] = useState<TaskType>();
 
-
   const handleTaskModal = (
     task: TaskType[] | undefined,
     agu: EventClickArg,
@@ -83,11 +82,12 @@ const CalendarSection = ({ task }: CalendarSectionProp) => {
                 "font-semibold",
                 "shadow-xs",
                 "hover:cursor-pointer",
-                "my-1"
+                "my-1",
               ]}
               eventClick={(agu) => {
                 handleTaskModal(task, agu);
               }}
+              fixedWeekCount={false}
               height={571}
             />
           </StyleWrapper>

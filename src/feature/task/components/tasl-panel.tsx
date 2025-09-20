@@ -25,10 +25,10 @@ const taskStatus = [
 interface TaskPanelProps {
   task: TaskType[] | undefined;
   isPending: boolean;
-  status : status
+  status: status;
 }
 
-const TaskPanel = ({ task, isPending , status }: TaskPanelProps) => {
+const TaskPanel = ({ task, isPending, status }: TaskPanelProps) => {
   return (
     <div>
       <Card className="relative">
@@ -39,7 +39,7 @@ const TaskPanel = ({ task, isPending , status }: TaskPanelProps) => {
           <Tabs defaultValue="inProgress">
             <TabsList>
               {taskStatus.map((s, i) => (
-                <TabsTrigger className="p-3" key={i} value={s.value} asChild>
+                <TabsTrigger className="md:p-3 text-xs md:text-sm" key={i} value={s.value} asChild>
                   <Link href={s.href}>{s.label}</Link>
                 </TabsTrigger>
               ))}
@@ -57,13 +57,25 @@ const TaskPanel = ({ task, isPending , status }: TaskPanelProps) => {
               </>
             ) : (
               <>
-                <ScrollArea className="h-[350px] md:h-[500px]">
-                  <div className="flex flex-col gap-3">
-                    {task?.map((task) => (
-                      <TaskCard key={task.id} task={task} calendarPage={true} />
-                    ))}
+                {task && task.length > 0 ? (
+                  <ScrollArea className="h-[350px] md:h-[500px]">
+                    <div className="flex flex-col gap-3">
+                      {task.map((task) => (
+                        <TaskCard
+                          key={task.id}
+                          task={task}
+                          calendarPage={true}
+                        />
+                      ))}
+                    </div>
+                  </ScrollArea>
+                ) : (
+                  <div className="flex w-full items-center justify-center rounded-md border-2 p-5">
+                    <p className="text-md text-muted-foreground font-semibold">
+                      No task available
+                    </p>
                   </div>
-                </ScrollArea>
+                )}
               </>
             )}
             <div className="w-full">

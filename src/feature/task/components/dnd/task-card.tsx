@@ -61,19 +61,47 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
             {task.tags && task.tags.length > 0 && (
               <Separator orientation="vertical" className="self-stretch" />
             )}
-            {task.tags?.map((tt) => (
-              <div key={tt.id}>
-                <p
-                  className={cn(
-                    "flex items-center gap-2 rounded-sm px-2 py-1",
-                    getTagsColor(tt.slug),
-                  )}
-                >
-                  <span className="text-xs">{tt.icon}</span>
-                  {tt.title}
-                </p>
+
+            {task.tags && task.tags.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2">
+                  {/* First tag */}
+                  <div>
+                    <p
+                      className={cn(
+                        "flex items-center gap-2 rounded-sm px-2 py-1",
+                        getTagsColor(task.tags[0].slug),
+                      )}
+                    >
+                      <span className="text-xs">{task.tags[0].icon}</span>
+                      {task.tags[0].title}
+                    </p>
+                  </div>
+                  {/* +1 mobile span */}
+                  <div>
+                    {task.tags.length > 1 && (
+                      <span className="md:hidden">+{task.tags.length - 1}</span>
+                    )}
+                  </div>
+                  {/* tag desktop slice(1) */}
+                  <div className="hidden md:flex">
+                    {task.tags.slice(1).map((tag) => (
+                      <div key={tag.id}>
+                        <p
+                          className={cn(
+                            "flex items-center gap-2 rounded-sm px-2 py-1",
+                            getTagsColor(tag.slug),
+                          )}
+                        >
+                          <span className="text-xs">{tag.icon}</span>
+                          {tag.title}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            ))}
+            )}
           </div>
 
           {/* content */}
@@ -104,6 +132,7 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
                 {dueStatus && (
                   <Badge
                     className={cn(
+                      "hidden 2xl:block",
                       dueStatus === "Overdue" && "bg-red-400",
                       dueStatus === "Upcoming" && "bg-yellow-400",
                     )}
@@ -117,9 +146,9 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
               </div>
               <div className="hidden md:flex">
                 {calendarPage && (
-                  <>
+                  <div>
                     <ChangeStatusButton status={task.status} id={task.id} />
-                  </>
+                  </div>
                 )}
               </div>
             </div>

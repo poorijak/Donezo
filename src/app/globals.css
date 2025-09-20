@@ -185,3 +185,7 @@
 .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
   @apply m-0;
 }
+
+.fc .fc-col-header-cell-cushion {
+  @apply text-xs text-center md:text-base;
+}
