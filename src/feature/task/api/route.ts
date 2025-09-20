@@ -7,7 +7,7 @@ import z from "zod";
 import { status } from "@prisma/client";
 
 export const TaskApp = new Hono()
-  .get("get-tag", async (c) => {
+  .get("/get-tag", async (c) => {
     const data = await db.tag.findMany({ orderBy: { createAt: "asc" } });
 
     const tag = data.map(({ id, icon, title, slug, textColor, bgColor }) => ({
