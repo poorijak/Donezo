@@ -65,7 +65,8 @@ export const useSignupWithEmail = () => {
     onSuccess: () => {
       queryClinet.invalidateQueries({ queryKey: ["user"] });
       toast.success("Sign up successfuly! Please verify your email");
-      router.push("/auth/email-verify");
+      // router.push("/auth/email-verify");
+      router.push("/");
     },
 
     onError: (err) => {

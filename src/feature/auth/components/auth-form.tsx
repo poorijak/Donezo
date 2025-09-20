@@ -10,7 +10,10 @@ import { AuthValue, signinValue, signupValue } from "@/types/auth";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import SubmitBtn from "@/components/shared/submit-btn";
 import AuthFooter from "./auth-footer";
-import { useSigninWithEmail, useSignupWithEmail } from "@/feature/auth/hooks/auth/useAuthQuery";
+import {
+  useSigninWithEmail,
+  useSignupWithEmail,
+} from "@/feature/auth/hooks/auth/useAuthQuery";
 
 interface AuthFormProps {
   type: "signin" | "signup";
@@ -30,7 +33,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
   const schema = useMemo(
     () => (type === "signin" ? signinSchema : signupSchema),
-    [type]
+    [type],
   );
 
   const form = useForm<AuthValue>({
@@ -46,7 +49,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     form.reset(
       type === "signin"
         ? { email: "", password: "" }
-        : { email: "", name: "", password: "" }
+        : { email: "", name: "", password: "" },
     );
   }, [type]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -68,7 +71,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         <CardContent>
           <div className="flex flex-col gap-5">
             <InputForm
-            inputType="input"
+              inputType="input"
               control={form.control}
               name="email"
               label="Email"
@@ -77,7 +80,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
             />
             {type === "signup" && (
               <InputForm
-              inputType="input"
+                inputType="input"
                 control={form.control}
                 name="name"
                 label="Name"
@@ -86,8 +89,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
               />
             )}
             <InputForm
-            inputType="input"
+              inputType="input"
               control={form.control}
+              type="password"
               name="password"
               label="Password"
               placeholder={
@@ -97,7 +101,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               }
               required
             />
-            <SubmitBtn  title={type === "signin" ? "Sign in" : "sign up"} />
+            <SubmitBtn title={type === "signin" ? "Sign in" : "sign up"} />
           </div>
         </CardContent>
         <CardFooter className="w-full">

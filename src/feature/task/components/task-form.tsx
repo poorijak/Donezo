@@ -34,6 +34,9 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
 
   const { data } = useGetTag();
 
+  console.log(data);
+  
+
   const form = useForm<TaskInputValue>({
     resolver: zodResolver(taskSchema),
     defaultValues: task
