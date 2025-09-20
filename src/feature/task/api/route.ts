@@ -8,18 +8,24 @@ import { status } from "@prisma/client";
 
 export const TaskApp = new Hono()
   .get("/get-tag", async (c) => {
-    const data = await db.tag.findMany({ orderBy: { createAt: "asc" } });
-
-    const tag = data.map(({ id, icon, title, slug, textColor, bgColor }) => ({
-      id,
-      icon,
-      title,
-      slug,
-      textColor,
-      bgColor,
-    }));
-    return c.json(tag);
+    try {
+      const data = await db.tag.findMany({ orderBy: { createAt: "asc" } });
+      const tag = data.map(({ id, icon, title, slug, textColor, bgColor }) => ({
+        id,
+        icon,
+        title,
+        slug,
+        textColor,
+        bgColor,
+      }));
+      return c.json(tag);
+      // eslint-disable-next-line
+    } catch (e: any) {
+      console.error("[GET TAG ERROR]", e?.message ?? e);
+      return c.json({ error: "failed to fetch tags" }, 500);
+    }
   })
+
   .get("/get-task-all", mustAuth, async (c) => {
     const user = c.get("user");
 
@@ -76,7 +82,7 @@ export const TaskApp = new Hono()
     const status = c.req.query("status") as status;
     const user = c.get("user");
 
-    const today = new Date()
+    const today = new Date();
 
     console.log(status);
 
