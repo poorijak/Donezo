@@ -32,7 +32,7 @@ const SubmitBtn = ({
       variant={variant}
       disabled={pending}
     >
-      {pending ? <Loader2 className="animate-spin" /> : <>{title}</>}
+      {pending ? <><Loader2 className="h-4 w-4 animate-spin" />Please wait...</> : <>{title}</>}
     </Button>
   );
 };

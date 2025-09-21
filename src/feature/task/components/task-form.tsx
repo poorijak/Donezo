@@ -145,7 +145,7 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
               }}
             />
             <SubmitBtn
-              title={task ? "Update Task" : "Create new task"}
+              title={task ? "Edit Task" : "Create new task"}
               type="submit"
               pending={isPending || form.formState.isSubmitting}
             />

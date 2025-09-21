@@ -97,8 +97,8 @@ export const useTaskMutation = () => {
       return res;
     },
 
-    onSuccess: () => {
-      toast.success("Create new task success");
+    onSuccess: (_data , veriables) => {
+      toast.success(veriables.taskId ? "Edit task success" : "Create new task success");
       queryClinet.invalidateQueries({ queryKey: ["Task"] });
     },
     onError: (err) => {
