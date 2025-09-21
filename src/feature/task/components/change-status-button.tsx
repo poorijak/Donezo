@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { status } from "@prisma/client";
 import React, { useTransition } from "react";
 import { useUpdateStatusTask } from "../hooks/useTask";
+import { Loader2 } from "lucide-react";
 
 interface ChangeStatusButtonProps {
   status: status;
@@ -9,9 +10,9 @@ interface ChangeStatusButtonProps {
 }
 
 const ChangeStatusButton = ({ status, id }: ChangeStatusButtonProps) => {
-  const { mutate } = useUpdateStatusTask();
+  const { mutate, isPending } = useUpdateStatusTask();
 
-  const [isPending, startTransition] = useTransition();
+  const [_isPending, startTransition] = useTransition();
 
   const buttonContent = [
     { status: "pending", label: "✅ Start Progress" },
@@ -50,7 +51,14 @@ const ChangeStatusButton = ({ status, id }: ChangeStatusButtonProps) => {
               onClick={handleChangeStatus}
               onPointerDown={(e) => e.stopPropagation()}
             >
-              {currentButton.label}
+              {isPending ? (
+                <>
+                <Loader2 className="animate-spin"/>
+                  <p>Changing status...</p>
+                </>
+              ) : (
+                currentButton.label
+              )}
             </Button>
           )}
         </div>
