@@ -101,7 +101,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
               }
               required
             />
-            <SubmitBtn title={type === "signin" ? "Sign in" : "sign up"} />
+            <SubmitBtn
+              title={type === "signin" ? "Sign in" : "sign up"}
+              pending={signin.isPending || signup.isPending}
+            />
           </div>
         </CardContent>
         <CardFooter className="w-full">
