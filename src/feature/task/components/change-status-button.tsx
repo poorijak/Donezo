@@ -13,6 +13,14 @@ const ChangeStatusButton = ({ status, id }: ChangeStatusButtonProps) => {
 
   const [isPending, startTransition] = useTransition();
 
+  const buttonContent = [
+    { status: "pending", label: "✅ Start Progress" },
+    { status: "inProgress", label: "🎯 Mark as Done" },
+    { status: "done", label: "🔄 Reset to Pending" },
+  ];
+
+  const currentButton = buttonContent.find((b) => b.status === status);
+
   const handleChangeStatus = () => {
     let newStatus: status | null = null;
 
@@ -34,33 +42,15 @@ const ChangeStatusButton = ({ status, id }: ChangeStatusButtonProps) => {
     <div>
       <>
         <div>
-          {status === "pending" && (
+          {currentButton && (
             <Button
+              className="flex md:hidden"
               disabled={isPending}
               variant="outline"
               onClick={handleChangeStatus}
+              onPointerDown={(e) => e.stopPropagation()}
             >
-              ✅ Start Progress
-            </Button>
-          )}
-
-          {status === "inProgress" && (
-            <Button
-              disabled={isPending}
-              variant="outline"
-              onClick={handleChangeStatus}
-            >
-              🎯 Mark as Done
-            </Button>
-          )}
-
-          {status === "done" && (
-            <Button
-              disabled={isPending}
-              variant="outline"
-              onClick={handleChangeStatus}
-            >
-              🔄 Reset to Pending
+              {currentButton.label}
             </Button>
           )}
         </div>

@@ -24,7 +24,7 @@ type TaskCardProps = {
   calendarPage?: boolean;
 };
 
-const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
+const TaskCard = ({ task }: TaskCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -141,15 +141,10 @@ const TaskCard = ({ task, calendarPage = false }: TaskCardProps) => {
                   </Badge>
                 )}
               </p>
-              <div className="flex md:hidden">
-                <ChangeStatusButton status={task.status} id={task.id} />
-              </div>
-              <div className="hidden md:flex">
-                {calendarPage && (
-                  <div>
-                    <ChangeStatusButton status={task.status} id={task.id} />
-                  </div>
-                )}
+              <div>
+                <div>
+                  <ChangeStatusButton status={task.status} id={task.id} />
+                </div>
               </div>
             </div>
           </div>
