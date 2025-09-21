@@ -34,7 +34,6 @@ const TaskForm = ({ open, onOpenChange, status, task }: TaskFormProps) => {
 
   const { data } = useGetTag();
 
-  console.log(isPending);
   
 
   const form = useForm<TaskInputValue>({

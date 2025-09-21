@@ -46,7 +46,6 @@ export const useGetTag = () => {
         throw new Error("Failed fetching tag");
       }
 
-      console.log(client.api.task["get-tag"].$url());
 
       const tag = await data.json();
 

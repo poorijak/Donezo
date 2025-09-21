@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { MailsIcon } from "@/components/ui/MailsIcon";
 import { useSendEmail } from "@/feature/auth/hooks/auth/useAuthQuery";
-import { useGetUser } from "@/feature/user/hooks/useUserQuery";
 import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -20,8 +19,6 @@ interface AuthEmailVerifyProps {
 }
 
 const AuthEmailVerify = ({ email }: AuthEmailVerifyProps) => {
-  const user = useGetUser()
-  console.log(user);
   
   const sendEmail = useSendEmail();
   return (

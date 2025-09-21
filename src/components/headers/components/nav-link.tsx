@@ -10,7 +10,6 @@ import React from "react";
 const DesktopNavlink = () => {
   const pathName = usePathname();
 
-  console.log(pathName);
 
   const NAVLINK = [
     { title: "Task Board", href: "/task", icon: <ClipboardList /> },
