@@ -22,7 +22,7 @@ const PLACEHOLDER = {
   email: "you@example.com",
   password: "Password",
   signup: {
-    name: "Full name (e.g. John Doe)",
+    name: "Username (e.g. Sommoi888)",
     password: "At least 8 characters • A-z, 0-9, symbol",
   },
 };
@@ -83,7 +83,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 inputType="input"
                 control={form.control}
                 name="name"
-                label="Name"
+                label="Username"
                 placeholder={PLACEHOLDER.signup.name}
                 required
               />
