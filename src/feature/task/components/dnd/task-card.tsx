@@ -1,3 +1,5 @@
+"use client";
+
 import formatStatus from "@/lib/format/formatStatus";
 import { cn, getStatusColor, getTagsColor } from "@/lib/utils";
 import { TaskType } from "@/types/task";
@@ -18,6 +20,7 @@ import ChangeStatusButton from "../change-status-button";
 import { checkDueDate, formatDateToDDMMYY } from "@/lib/format/formatDate";
 import "animate.css";
 import { Badge } from "@/components/ui/badge";
+import { useMediaQuery } from "usehooks-ts";
 
 type TaskCardProps = {
   task: TaskType;
@@ -25,6 +28,8 @@ type TaskCardProps = {
 };
 
 const TaskCard = ({ task }: TaskCardProps) => {
+  const isMobile = useMediaQuery("(min-width : 768px)");
+
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -42,7 +47,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       <div
         {...attributes}
         {...listeners}
-        ref={setNodeRef}
+        ref={isMobile ? setNodeRef : null}
         style={style}
         className="bg-card relative cursor-grab rounded-md border p-4 shadow-sm"
       >
@@ -125,11 +130,12 @@ const TaskCard = ({ task }: TaskCardProps) => {
                   "text-muted-foreground flex items-center gap-2 text-sm font-medium",
                   dueStatus === "Overdue" && "text-red-400",
                   dueStatus === "Upcoming" && "text-yellow-500",
+                  task.status === "done" && "text-green-500",
                 )}
               >
                 <CalendarClock size={16} />
                 <span>{formatDateToDDMMYY(task.end)}</span>
-                {dueStatus && (
+                {dueStatus && task.status !== "done" && (
                   <Badge
                     className={cn(
                       "hidden 2xl:block",
@@ -142,9 +148,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 )}
               </p>
               <div>
-                <div>
-                  <ChangeStatusButton status={task.status} id={task.id} />
-                </div>
+                <ChangeStatusButton status={task.status} id={task.id} />
               </div>
             </div>
           </div>
