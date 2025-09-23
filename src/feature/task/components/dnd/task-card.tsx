@@ -45,8 +45,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
   return (
     <div className="w-full">
       <div
-        {...attributes}
-        {...listeners}
+          {...(!isMobile ? { ...attributes, ...listeners } : {})}
         ref={isMobile ? setNodeRef : null}
         style={style}
         className="bg-card relative cursor-grab rounded-md border p-4 shadow-sm"
