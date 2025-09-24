@@ -1,4 +1,4 @@
-# ✏️ Donez0 | Task management website
+# ✏️ Donez0 | Task Management Website
 
 A modern **Task Management & Calendar Web App** built with **Next.js 15**, designed for productivity, collaboration, and smart scheduling.  
 Live Demo 👉 [donez0.vercel.app](https://donez0.vercel.app)
